@@ -41,6 +41,20 @@ Since the global pandemic hit a few years ago, people have started to pay greate
 #### Why choose Dr. Mouse?  
 Mice are intellectual creatures. Much like us, some prefer to stay close to peers and others prefer solitude. Mice have lots of personality, and are thought to exhibit emotional intelligence and empathy as well. Rest assured, Dr. Mouse provides an excellent safe space for anyone and everyone!  
 [=🐭=](https://phys.org/news/2019-11-scientists-mouse-personality.html#:~:text=Some%20are%20quick%20to%20explore,life%20and%20define%20their%20personality)  
-[🐁.....](https://www.earth.com/news/mice-pass-the-mirror-test-does-that-mean-they-are-self-aware/)  
+[🐁.....](https://www.earth.com/news/mice-pass-the-mirror-test-does-that-mean-they-are-self-aware/)   
+
+***
+
+*User Stories*
+- As a user, I want to be able to track the total number of entries logged.
+- As a user, I want to be able to store and retrieve all logged entries [that have not been removed].
+- As a user, I want to be able to create log entries.
+- As a user, I want to be able to delete log entries.
+- As a user, I want to be able to modify log entries and their metadata properties.
+   - stored metadata for each entry:
+      - date logged (*required*; automatic)
+      - entry title (*optional*; user-generated)
+      - content of entry (*required*; user-generated)
+      - mood at time of entry creation (*optional*; user-generated)
 
 ###### `©jieva 2024`

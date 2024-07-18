@@ -21,6 +21,7 @@ public class UserHandler {
     private static final int REMOVE = 2;
     private static final int EDIT = 3;
     // private static final int FILTER = 4;
+    private static final int TOTAL = 5;
 
     // ==========--CONSTRUCTOR--==========
     /**
@@ -53,6 +54,8 @@ public class UserHandler {
             executeEdit();
             // } else if (chooseAction() == FILTER) {
             // executeFilter();
+        } else if (chooseAction() == TOTAL) {
+            executeTotal();
         } else if (chooseAction() == INVALID) {
             System.out.println("\nSQUEEEAK!...Invalid input. Please try again!");
         }
@@ -167,6 +170,20 @@ public class UserHandler {
     // }
     // }
 
+    /*
+     * EFFECTS: prints the number of entries in the journal;
+     */
+    private void executeTotal() {
+        clearScreen();
+        if (journal.getNumEntries() == 0) {
+            System.out.println("You don't have any saved log entries.\nWrite one now!");
+        } else if (journal.getNumEntries() == 1) {
+            System.out.println("You only have 1 saved log entry. Keep going!");
+        } else { 
+            System.out.println("\nYou have " + journal.getNumEntries() + " saved log entries. Awesome!");
+        }
+    }
+
     // ==========--HELPER-METHODS--==========
     /*
      * EFFECTS: clears the terminal screen;
@@ -202,6 +219,7 @@ public class UserHandler {
             System.out.println("edit - modify a saved log entry");
             // System.out.println("filter - view log entries using filter");
         }
+        System.out.println("total - view the number of logged entries");
     }
 
     /*
@@ -228,6 +246,8 @@ public class UserHandler {
             return EDIT;
             // } else if (selection.equals("filter")) {
             // return FILTER;
+        } else if (selection.equals("total")) {
+            return TOTAL;
         } else {
             System.out.println("\nSqueakers! That wasn't one of the menu options!");
             return INVALID;
