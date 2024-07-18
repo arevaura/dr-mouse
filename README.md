@@ -19,7 +19,7 @@ Dr. Mouse is welcoming, understanding, and a great listener overall. With Dr. Mo
    - mood at time of entry creation (*optional*; user-generated)
 
 **What does the application do?**  
-This application is a platform that will allow users to express their daily thoughts and feelings. The 'Dr. Mouse' desktop app can take in and retrieve written entries. Users can log as many entries as they would like. Additionally, they can go back and modify or delete entry contents afterwards.
+This application is a platform that will allow users to express their daily thoughts and feelings. The 'Dr. Mouse' desktop app can take in and retrieve written entries. Users can log as many entries as they would like. Additionally, they can go back and modify or delete entry contents afterwards.  
 `Classes: Journal, Entry`
 
 **Who can use this?**  
@@ -39,7 +39,7 @@ Since the global pandemic hit a few years ago, people have started to pay greate
 
 
 #### Why choose Dr. Mouse?  
-Mice are intellectual creatures. Much like us, some prefer to stay close to peers and others prefer solitude. Mice have lots of personality, and are thought to exhibit emotional intelligence and empathy as well. Dr. Mouse provides a safe space for everyone!  
+Mice are intellectual creatures. Much like us, some prefer to stay close to peers and others prefer solitude. Mice have lots of personality, and are thought to exhibit emotional intelligence and empathy as well. Rest assured, Dr. Mouse provides an excellent safe space for anyone and everyone!  
 [=🐭=](https://phys.org/news/2019-11-scientists-mouse-personality.html#:~:text=Some%20are%20quick%20to%20explore,life%20and%20define%20their%20personality)  
 [🐁.....](https://www.earth.com/news/mice-pass-the-mirror-test-does-that-mean-they-are-self-aware/)  
 
