@@ -7,7 +7,9 @@ import java.util.Scanner;
 import model.*;
 
 /**
- * Represents a user handler that manages the user's interaction with the journal.
+ * Represents a handler that manages the user's interaction with the journal.
+ * Users can view, add, remove, and edit entries in the journal.
+ * All feedback messages and UI are displayed in the terminal.
  */
 public class UserHandler {
     private Journal journal = new Journal();
@@ -23,7 +25,7 @@ public class UserHandler {
     // ==========--CONSTRUCTOR--==========
     /**
      * Constructs a new UserHandler object and prompts the user to choose an action.
-     * Then executes the corresponding action according to the appropriate method.
+     * A menu of options is given for the user's reference.
      */
     public UserHandler() {
         while (true) {
@@ -36,7 +38,7 @@ public class UserHandler {
     // ==========--ACTIONS--==========
     /*
      * EFFECTS: runs the main menu by calling the chooseAction method
-     * -------- and then executes the corresponding action call;
+     * -------- which will determine the action to execute;
      */
     private void runMenu() {
         if (chooseAction() == EXIT) {
@@ -49,8 +51,8 @@ public class UserHandler {
             executeRemove();
         } else if (chooseAction() == EDIT) {
             executeEdit();
-        // } else if (chooseAction() == FILTER) {
-        //     executeFilter();
+            // } else if (chooseAction() == FILTER) {
+            // executeFilter();
         } else if (chooseAction() == INVALID) {
             System.out.println("\nSQUEEEAK!...Invalid input. Please try again!");
         }
@@ -89,10 +91,11 @@ public class UserHandler {
         System.out.println("\nAdding your new log entry...");
         System.out.println("Your new log entry has been added!");
     }
-    
+
     /*
      * MODIFIES: entries ArrayList in journal
-     * EFFECTS: executes the remove action by prompting the user to select an entry to remove;
+     * EFFECTS: executes the remove action by prompting the user to select an entry
+     * -------- to remove;
      */
     private void executeRemove() {
         clearScreen();
@@ -103,7 +106,9 @@ public class UserHandler {
     }
 
     /*
-     * EFFECTS: executes the edit action by prompting the user to select an entry to modify;
+     * MODIFIES: entry object from entries ArrayList in journal
+     * EFFECTS: executes the edit action by prompting the user to select an entry to
+     * -------- modify;
      */
     private void executeEdit() {
         clearScreen();
@@ -130,30 +135,36 @@ public class UserHandler {
     }
 
     // /*
-    //  * EFFECTS: executes the filter action by prompting the user to enter a date to filter entries;
-    //  */
+    // * EFFECTS: executes the filter action by prompting the user to enter a date
+    // to filter entries;
+    // */
     // private void executeFilter() {
-    //     clearScreen();
-    //     System.out.println("Please enter 1 to filter by date, 2 to filter by mood, or 3 to filter by keyword:");
-    //     int action = input.nextInt();
-    //     // input.nextLine(); // Consume newline left-over
-    //     String search = null;
-    //     if (action == 1) {
-    //         System.out.println("Please enter the date you want to filter by (i.e. \"2021-01-01\"):");
-    //         search = input.nextLine().toLowerCase();
-    //         printEntries(journal.filterEntriesByDate(search));
-    //     } else if (action == 2) {
-    //         System.out.println("Please enter the mood you want to filter by (i.e. \"happy\"):");
-    //         search = input.nextLine().toLowerCase();
-    //         printEntries(journal.filterEntriesByMood(search));
-    //     } else if (action == 3) {
-    //         System.out.println("Please enter the keyword you want to filter by (i.e. \"cheese\"):");
-    //         search = input.nextLine().toLowerCase();
-    //         printEntries(journal.filterEntriesByKeyword(search));
-    //     } else {
-    //         System.out.println("\nSqueaky cheese! That wasn't one of the filter options!");
-    //         executeFilter();
-    //     }
+    // clearScreen();
+    // System.out.println("Please enter 1 to filter by date, 2 to filter by mood, or
+    // 3 to filter by keyword:");
+    // int action = input.nextInt();
+    // // input.nextLine(); // Consume newline left-over
+    // String search = null;
+    // if (action == 1) {
+    // System.out.println("Please enter the date you want to filter by (i.e.
+    // \"2021-01-01\"):");
+    // search = input.nextLine().toLowerCase();
+    // printEntries(journal.filterEntriesByDate(search));
+    // } else if (action == 2) {
+    // System.out.println("Please enter the mood you want to filter by (i.e.
+    // \"happy\"):");
+    // search = input.nextLine().toLowerCase();
+    // printEntries(journal.filterEntriesByMood(search));
+    // } else if (action == 3) {
+    // System.out.println("Please enter the keyword you want to filter by (i.e.
+    // \"cheese\"):");
+    // search = input.nextLine().toLowerCase();
+    // printEntries(journal.filterEntriesByKeyword(search));
+    // } else {
+    // System.out.println("\nSqueaky cheese! That wasn't one of the filter
+    // options!");
+    // executeFilter();
+    // }
     // }
 
     // ==========--HELPER-METHODS--==========
@@ -175,6 +186,7 @@ public class UserHandler {
             System.out.println("\n\nSqueak...Something went wrong :(");
         }
     }
+
     /*
      * EFFECTS: prints the main menu options;
      */
@@ -191,17 +203,18 @@ public class UserHandler {
             // System.out.println("filter - view log entries using filter");
         }
     }
-    
+
     /*
      * EFFECTS: prompts user to choose action and returns corresponding integer;
-     * -------- see declared fields for integer values;
+     * -------- see declared fields for corresponding integer values;
      */
     private int chooseAction() {
         clearScreen();
-        printMenuOptions();        
+        printMenuOptions();
         String selection = input.nextLine().toLowerCase();
         System.out.println("\nYou have selected to:\n" + selection.toUpperCase());
-        // System.out.println("\nProcessing your selection...\nPlease enter [any key] to continue.");
+        // System.out.println("\nProcessing your selection...\nPlease enter [any key] to
+        // continue.");
         // waitForKey();
         if (selection.equals("exit")) {
             return EXIT;
@@ -213,8 +226,8 @@ public class UserHandler {
             return REMOVE;
         } else if (selection.equals("edit")) {
             return EDIT;
-        // } else if (selection.equals("filter")) {
-        //     return FILTER;
+            // } else if (selection.equals("filter")) {
+            // return FILTER;
         } else {
             System.out.println("\nSqueakers! That wasn't one of the menu options!");
             return INVALID;
@@ -229,7 +242,6 @@ public class UserHandler {
         for (int i = 0; i < journal.getNumEntries(); i++) {
             System.out.println(i + 1 + ". " + journal.getEntries().get(i).getContent());
         }
-        
         int selection = input.nextInt();
         Entry entry = journal.getEntries().get(selection - 1);
         System.out.println("\nSelecting your log entry now...");
@@ -239,7 +251,7 @@ public class UserHandler {
     }
 
     /*
-     * EFFECTS: prints all entries in the journal;
+     * EFFECTS: prints all saved entries in the journal;
      */
     private void printEntries(List<Entry> entries) {
         for (Entry entry : journal.getEntries()) {

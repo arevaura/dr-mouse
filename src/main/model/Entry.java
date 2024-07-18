@@ -3,13 +3,13 @@ package model;
 import java.time.*;
 
 /**
- * Represents an entry in a journal with a date, content of the entry, 
+ * Represents an entry in a journal with a date, content of the entry,
  * and optional title and mood fields.
- *  - All fields can be retrieved.
- *  - The date field is automatically set to the date the entry is created.
- *  - The title, content, and mood fields can be set by the user.
- *  - The content field is required as input upon the creation of an Entry object, 
- *    but it can be rewritten using its setter method.
+ * - All fields can be retrieved.
+ * - The date field is automatically set to the date the entry is created.
+ * - The title, content, and mood fields can be set by the user.
+ * - The content field is required as input upon creating an Entry,
+ * --but it can be rewritten using its setter method.
  */
 public class Entry {
     // ==========--FIELDS--==========
@@ -20,10 +20,10 @@ public class Entry {
 
     // ==========--CONSTRUCTOR--==========
     /*
-     * EFFECTS: creates a new Entry object 
-     *          with date, title, content, and mood fields;
-     *          the date the entry is created is automatically saved to the date field;
-     *          String fields are set to null so user can manually choose to set them;
+     * EFFECTS: creates a new Entry object
+     * with date, title, content, and mood fields;
+     * the date the entry is created is automatically saved to the date field;
+     * String fields are set to null so user can manually choose to set them;
      */
     public Entry(String text) {
         this.date = LocalDate.now();

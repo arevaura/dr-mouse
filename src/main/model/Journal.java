@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 /**
  * Represents a journal with a list of entries and a number of entries.
- *  - A journal can add, remove, and filter entries by date, mood, and keyword.
- *  - A journal can also return all entries logged in the journal.
- *  - A journal can also return the number of entries logged in the journal.
+ * - A journal can add and remove entries.
+ * - A journal can also return all entries logged in the journal.
+ * - A journal can also return the number of entries logged in the journal.
  */
 public class Journal {
     // ==========--FIELDS--==========
@@ -15,8 +15,8 @@ public class Journal {
 
     // ==========--CONSTRUCTOR--==========
     /*
-     * EFFECTS: creates a new journal object with an empty list of entries and sets
-     *          the number of entries to 0;
+     * EFFECTS: creates a new journal object with an empty list of entries
+     * -------- and sets the number of entries to 0;
      */
     public Journal() {
         entries = new ArrayList<>();
@@ -42,7 +42,7 @@ public class Journal {
     /*
      * MODIFIES: this
      * EFFECTS: adds a new entry to the journal;
-     *          increments the number of entries by 1;
+     * -------- increments the number of entries by 1;
      */
     public void addEntry(Entry entry) {
         entries.add(entry);
@@ -53,7 +53,7 @@ public class Journal {
      * REQUIRES: journal must contain the given entry
      * MODIFIES: this
      * EFFECTS: removes an entry from the journal;
-     *          increments the number of entries by -1;
+     * -------- increments the number of entries by -1;
      */
     public void removeEntry(Entry entry) {
         entries.remove(entry);
@@ -63,7 +63,7 @@ public class Journal {
     /*
      * REQUIRES: date must follow "yyyy-mm-dd" string format
      * EFFECTS: returns all entries in the journal that match the given date;
-     *          if no entries have the given date, returns an empty list;
+     * -------- if no entries have the given date, returns an empty list;
      */
     public ArrayList<Entry> filterEntriesByDate(String date) {
         ArrayList<Entry> entriesByDate = new ArrayList<>();
@@ -78,7 +78,7 @@ public class Journal {
     /*
      * REQUIRES: mood is not null or ""
      * EFFECTS: returns all entries in the journal that match the given mood;
-     *          if no entries have the given mood, returns an empty list;
+     * -------- if no entries have the given mood, returns an empty list;
      */
     public ArrayList<Entry> filterEntriesByMood(String mood) {
         ArrayList<Entry> entriesByMood = new ArrayList<>();
@@ -93,7 +93,7 @@ public class Journal {
     /*
      * REQUIRES: keyword is not null or ""
      * EFFECTS: returns all entries in the journal that contain the given keyword;
-     *          if no entries contain the given keyword, returns an empty list;
+     * -------- if no entries contain the given keyword, returns an empty list;
      */
     public ArrayList<Entry> filterEntriesByKeyword(String keyword) {
         ArrayList<Entry> entriesByKeyword = new ArrayList<>();
