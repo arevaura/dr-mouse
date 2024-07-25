@@ -2,13 +2,24 @@ package model;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import persistence.Writable;
+
 /**
  * Represents a journal with a list of entries and a number of entries.
- * - A journal can add and remove entries.
+ * - A journal can add, edit, and remove entries.
  * - A journal can also return all entries logged in the journal.
  * - A journal can also return the number of entries logged in the journal.
+ * 
+ * Special Note: The code for the following methods in this class was based on
+ * ------------- sample code provided from the UBC CPSC210 2024 summer course
+ * ------------- and then later adapted to function in this program:
+ * ------------- 1) [public JSONObject] toJson()
+ * ------------- 2) [private JSONArray] EntriesToJson()
  */
-public class Journal {
+public class Journal implements Writable {
     // ==========--FIELDS--==========
     private ArrayList<Entry> entries;
     private int numEntries;
@@ -39,6 +50,15 @@ public class Journal {
     }
 
     // ==========--FUNCTIONAL-METHODS--==========
+    /*
+     * MODIFIES: this
+     * EFFECTS: resets Journal to have an empty list and numEntries = 0;
+     */
+    public void reset() {
+        entries = new ArrayList<>();
+        numEntries = 0;
+    }
+
     /*
      * MODIFIES: this
      * EFFECTS: adds a new entry to the journal;
@@ -103,5 +123,28 @@ public class Journal {
             }
         }
         return entriesByKeyword;
+    }
+
+    /*
+     * EFFECTS: saves journal data as JSONObject
+     */
+    @Override // from Writable interface
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("entries", EntriesToJson());
+        return json;
+    }
+
+    /*
+     * EFFECTS: saves all entries from this journal as JSONArray
+     */
+    private JSONArray EntriesToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Entry e : entries) {
+            jsonArray.put(e.toJson());
+        }
+
+        return jsonArray;
     }
 }

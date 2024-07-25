@@ -16,10 +16,17 @@ public class TestEntry {
 
     @Test
     void testEntry() {
-        assertEquals(LocalDate.now(), testEntry.getDate());
-        assertNull(testEntry.getTitle());
+        assertEquals(LocalDate.now().toString(), testEntry.getDate());
+        assertEquals("select edit from menu to set title", testEntry.getTitle());
         assertEquals("content", testEntry.getContent());
-        assertNull(testEntry.getMood());
+        assertEquals("select edit from menu to set mood", testEntry.getMood());
+    }
+
+    @Test
+    void testSetDate() {
+        testEntry.setDate("2024-08-20");
+        // LocalDate birthday = LocalDate.of(2024, 8, 20);
+        assertEquals("2024-08-20", testEntry.getDate());
     }
 
     @Test

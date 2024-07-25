@@ -65,6 +65,21 @@ public class TestJournal {
     }
 
     @Test
+    void testReset() {
+        diaryJournal.addEntry(testEntry1);
+        diaryJournal.addEntry(testEntry2);
+        diaryJournal.addEntry(testEntry3);
+        assertEquals(3, diaryJournal.getNumEntries());
+        diaryJournal.reset();
+        assertEquals(0, diaryJournal.getNumEntries());
+        assertTrue(diaryJournal.getEntries().isEmpty());
+
+        diaryJournal.reset();
+        assertEquals(0, diaryJournal.getNumEntries());
+        assertTrue(diaryJournal.getEntries().isEmpty());
+    }
+
+    @Test
     void testFilterEntriesByDate() {
         diaryJournal.addEntry(testEntry1); // "test 1"
         diaryJournal.addEntry(testEntry2); // "test 11"
