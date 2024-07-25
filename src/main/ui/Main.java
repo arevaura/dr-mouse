@@ -7,7 +7,8 @@ import java.io.FileNotFoundException;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        Terminal.clearScreen();;
+        Terminal.clearScreen();
+        ;
         System.out.println("Welcome, Dr. Mouse says hello!\n~squeak =.="); // welcome message
         System.out.println("\nPlease enter [any key] to embark on your journalling journey today:");
         System.in.read(); // waits for user to enter any key

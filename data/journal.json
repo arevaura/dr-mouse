@@ -1,14 +1,28 @@
-{"entries": [
-    {
-        "date": "2024-07-24",
-        "mood": "friendly",
-        "title": "GREETING",
-        "content": "hello"
-    },
-    {
-        "date": "2024-07-24",
-        "mood": "wistful",
-        "title": "FAREWELL",
-        "content": "goodbye"
-    }
-]}
+{
+    "entries": [
+        {
+            "date": "2024-07-24",
+            "mood": "friendly",
+            "title": "GREETING",
+            "content": "hello"
+        },
+        {
+            "date": "2024-07-24",
+            "mood": "wistful",
+            "title": "FAREWELL",
+            "content": "goodbye"
+        },
+        {
+            "date": "2024-08-20",
+            "mood": "Excited",
+            "title": "BIRTHDAY",
+            "content": "It is my birthday today. I am super excited to turn 19!"
+        },
+        {
+            "date": "2024-07-24",
+            "mood": "Tired",
+            "title": "GREETINGS ALIEN",
+            "content": "Yes, I am a time traveller. I have returned from my birthday to this date. I am 18 again, hooray!"
+        }
+    ]
+}

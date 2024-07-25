@@ -131,14 +131,14 @@ public class Journal implements Writable {
     @Override // from Writable interface
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("entries", EntriesToJson());
+        json.put("entries", entriesToJson());
         return json;
     }
 
     /*
      * EFFECTS: saves all entries from this journal as JSONArray
      */
-    private JSONArray EntriesToJson() {
+    private JSONArray entriesToJson() {
         JSONArray jsonArray = new JSONArray();
 
         for (Entry e : entries) {

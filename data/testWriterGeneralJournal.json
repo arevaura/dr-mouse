@@ -1,14 +1,16 @@
-{"entries": [
-    {
-        "date": "2024-07-24",
-        "mood": "select edit from menu to set mood",
-        "title": "select edit from menu to set title",
-        "content": "hello"
-    },
-    {
-        "date": "2024-07-24",
-        "mood": "select edit from menu to set mood",
-        "title": "select edit from menu to set title",
-        "content": "content"
-    }
-]}
+{
+    "entries": [
+        {
+            "date": "2024-07-24",
+            "mood": "select edit from menu to set mood",
+            "title": "select edit from menu to set title",
+            "content": "hello"
+        },
+        {
+            "date": "2024-07-24",
+            "mood": "select edit from menu to set mood",
+            "title": "select edit from menu to set title",
+            "content": "content"
+        }
+    ]
+}

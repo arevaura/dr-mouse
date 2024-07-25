@@ -14,6 +14,7 @@ public class Terminal {
         // return;
         System.out.print("\033[H\033[2J");
     }
+
     /*
      * EFFECTS: waits for user to enter any key to continue;
      */

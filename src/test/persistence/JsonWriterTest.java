@@ -16,9 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * ------------- and then later adapted to function in this program.
  */
 class JsonWriterTest extends JsonTest {
-    //NOTE TO CPSC 210 STUDENTS: the strategy in designing tests for the JsonWriter is to
-    //write data to a file and then use the reader to read it back in and check that we
-    //read in a copy of what was written out.
+    // NOTE TO CPSC 210 STUDENTS: the strategy in designing tests for the JsonWriter
+    // is to
+    // write data to a file and then use the reader to read it back in and check
+    // that we
+    // read in a copy of what was written out.
 
     @Test
     void testWriterInvalidFile() {
@@ -44,7 +46,6 @@ class JsonWriterTest extends JsonTest {
 
             JsonReader reader = new JsonReader("./data/testWriterEmptyJournal.json");
             jr = reader.read();
-            // assertEquals("My workroom", wr.getName());
             assertEquals(0, jr.getNumEntries());
         } catch (IOException e) {
             fail("Exception should not have been thrown");
@@ -55,8 +56,8 @@ class JsonWriterTest extends JsonTest {
     void testWriterGeneralJournal() {
         try {
             Journal jr = new Journal();
-            jr.addEntry(new Entry("hello"));
-            jr.addEntry(new Entry("content"));
+            jr.addEntry(new Entry("hello")); // first entry
+            jr.addEntry(new Entry("content")); // second entry
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralJournal.json");
             writer.open();
             writer.write(jr);
@@ -64,11 +65,18 @@ class JsonWriterTest extends JsonTest {
 
             JsonReader reader = new JsonReader("./data/testWriterGeneralJournal.json");
             jr = reader.read();
-            // assertEquals("My work room", wr.getName());
             List<Entry> entries = jr.getEntries();
             assertEquals(2, entries.size());
+            // check first entry
+            checkDate("2024-07-24", entries.get(0));
+            checkTitle("select edit from menu to set title", entries.get(0));
             checkContent("hello", entries.get(0));
+            checkMood("select edit from menu to set mood", entries.get(0));
+            // check second entry
+            checkDate("2024-07-24", entries.get(1));
+            checkTitle("select edit from menu to set title", entries.get(1));
             checkContent("content", entries.get(1));
+            checkMood("select edit from menu to set mood", entries.get(1));
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");

@@ -59,7 +59,8 @@ public class UserHandler {
         }
         System.out.println("total --> view the number of logged entries");
         System.out.println("save --> save journal data");
-        System.out.println("load --> load saved journal data"); // TODO: note: will override current journal - print this to notify users
+        System.out.println("load --> load saved journal data");
+        // TODO: note: will override current journal - print this to notify users
     }
 
     /*

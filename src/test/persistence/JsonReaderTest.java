@@ -34,7 +34,6 @@ class JsonReaderTest extends JsonTest {
         JsonReader reader = new JsonReader("./data/testReaderEmptyJournal.json");
         try {
             Journal jr = reader.read();
-            // assertEquals("My work room", wr.getName());
             assertEquals(0, jr.getNumEntries());
         } catch (IOException e) {
             fail("Couldn't read from file");
@@ -54,8 +53,10 @@ class JsonReaderTest extends JsonTest {
             checkContent("hello", entries.get(0));
             checkMood("friendly", entries.get(0));
             // test second entry (has some metadata)
+            checkDate("2024-07-24", entries.get(1));
             checkTitle("FAREWELL", entries.get(1));
             checkContent("goodbye", entries.get(1));
+            checkMood("select edit from menu to set mood", entries.get(1));
         } catch (IOException e) {
             fail("Couldn't read from file");
         }
