@@ -56,7 +56,7 @@ Mice are intellectual creatures. Much like us, some prefer to stay close to peer
       - entry title (*optional*; user-generated)
       - content of entry (*required*; user-generated)
       - mood at time of entry creation (*optional*; user-generated)
-- As a user, when I select the quit/exit option from the application menu, I want to be reminded to save my log entries to file and have the option to do so or not.
-- As a user, when I start the application, I want to be given the option to load my log entries from file and continue editing them.
+- As a user, I want to be able to save my log entries to file and have the option to do so or not.
+- As a user, I want to be given the option to load my log entries from file and continue editing them.
 
 ###### `©jieva 2024`
