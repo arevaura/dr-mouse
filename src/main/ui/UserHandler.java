@@ -93,33 +93,40 @@ public class UserHandler {
     }
 
     /*
-     * EFFECTS: prompts user to choose action and returns corresponding integer;
-     * -------- see declared fields for corresponding integer values;
+     * EFFECTS: sets user up to choose menu action from available choices;
      */
-    private Boolean chooseAction() { // TODO: switch case
+    private Boolean chooseAction() {
         Terminal.clearScreen();
         printMenuOptions();
-        String selection = input.nextLine().toLowerCase();
-        if (selection.equals("exit")) {
-            return Menu.exit();
-        } else if (selection.equals("save")) {
-            return saveJournal();
-        } else if (selection.equals("load")) {
-            return loadJournal();
-        } else if (selection.equals("view")) {
-            return Menu.view(journal);
-        } else if (selection.equals("add")) {
-            return Menu.add(input, journal);
-        } else if (selection.equals("remove")) {
-            return Menu.remove(input, journal);
-        } else if (selection.equals("edit")) {
-            return Menu.edit(input, journal);
-        } else if (selection.equals("total")) {
-            return Menu.total(journal);
-        } else if (selection.equals("reset")) {
-            return Menu.reset(input, journal);
+        return userSelectsFromMenu();
+    }
+
+    /*
+     * EFFECTS: prompts user to choose action and follows throught with command;
+     */
+    private Boolean userSelectsFromMenu() {
+        switch (input.nextLine().toLowerCase()) {
+            case "exit":
+                return Menu.exit();
+            case "save":
+                return saveJournal(); 
+            case "load":
+                return loadJournal();
+            case "view":
+                return Menu.view(journal);
+            case "add":
+                return Menu.add(input, journal);
+            case "remove":
+                return Menu.remove(input, journal);
+            case "edit":
+                return Menu.edit(input, journal);
+            case "total":
+                return Menu.total(journal);
+            case "reset":
+                return Menu.reset(input, journal);
+            default:
+                System.out.println("\nWhiskers! That wasn't one of the menu options!");
+                return false;
         }
-        System.out.println("\nWhiskers! That wasn't one of the menu options!");
-        return false;
     }
 }
