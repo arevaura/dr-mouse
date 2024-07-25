@@ -109,7 +109,7 @@ public class UserHandler {
             case "exit":
                 return Menu.exit();
             case "save":
-                return saveJournal(); 
+                return saveJournal();
             case "load":
                 return loadJournal();
             case "view":
