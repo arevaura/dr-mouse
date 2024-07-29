@@ -37,9 +37,9 @@ public class Entry implements Writable {
     public Entry(String text) {
         this.date = LocalDate.now();
 
-        this.title = "select edit from menu to set title";
+        this.title = "";
         this.content = text;
-        this.mood = "select edit from menu to set mood";
+        this.mood = "";
     }
 
     // ==========--GETTER-METHODS--==========
