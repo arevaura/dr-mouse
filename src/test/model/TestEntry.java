@@ -17,9 +17,9 @@ public class TestEntry {
     @Test
     void testEntry() {
         assertEquals(LocalDate.now().toString(), testEntry.getDate());
-        assertEquals("select edit from menu to set title", testEntry.getTitle());
+        assertEquals("", testEntry.getTitle());
         assertEquals("content", testEntry.getContent());
-        assertEquals("select edit from menu to set mood", testEntry.getMood());
+        assertEquals("", testEntry.getMood());
     }
 
     @Test
