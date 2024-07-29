@@ -33,8 +33,10 @@ public class JsonWriter {
     // MODIFIES: this
     // EFFECTS: writes JSON representation of journal to file
     public void write(Journal jr) {
+        saveToFile("\n");
         JSONObject json = jr.toJson();
         saveToFile(json.toString(TAB));
+        saveToFile("\n");
     }
 
     // MODIFIES: this

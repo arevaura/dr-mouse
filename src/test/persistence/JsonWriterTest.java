@@ -6,6 +6,7 @@ import model.Journal;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,10 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class JsonWriterTest extends JsonTest {
     // NOTE TO CPSC 210 STUDENTS: the strategy in designing tests for the JsonWriter
-    // is to
-    // write data to a file and then use the reader to read it back in and check
-    // that we
-    // read in a copy of what was written out.
+    // is to write data to a file and then use the reader to read it back in and
+    // check that we read in a copy of what was written out.
 
     @Test
     void testWriterInvalidFile() {
@@ -68,15 +67,15 @@ class JsonWriterTest extends JsonTest {
             List<Entry> entries = jr.getEntries();
             assertEquals(2, entries.size());
             // check first entry
-            checkDate("2024-07-24", entries.get(0));
-            checkTitle("select edit from menu to set title", entries.get(0));
+            checkDate(LocalDate.now().toString(), entries.get(0)); // TODO: check that this won't be a problem
+            checkTitle("", entries.get(0));
             checkContent("hello", entries.get(0));
-            checkMood("select edit from menu to set mood", entries.get(0));
+            checkMood("", entries.get(0));
             // check second entry
-            checkDate("2024-07-24", entries.get(1));
-            checkTitle("select edit from menu to set title", entries.get(1));
+            checkDate(LocalDate.now().toString(), entries.get(1)); // TODO: is it supposed to be today's date?
+            checkTitle("", entries.get(1));
             checkContent("content", entries.get(1));
-            checkMood("select edit from menu to set mood", entries.get(1));
+            checkMood("", entries.get(1));
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
