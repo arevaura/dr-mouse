@@ -97,7 +97,7 @@ public class UserHandler {
      * EFFECTS: sets user up to choose menu action from available choices;
      */
     private Boolean chooseAction() {
-        //Terminal.clearScreen(); // TODO: remove?
+        // Terminal.clearScreen(); // TODO: remove?
         printMenuOptions();
         return userSelectsFromMenu();
     }

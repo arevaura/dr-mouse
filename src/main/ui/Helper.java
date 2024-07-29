@@ -44,6 +44,10 @@ public class Helper {
         return entry;
     }
 
+    /*
+     * EFFECTS: takes user input and returns it if input is valid integer type
+     * -------- otherwise: loop input scanner until given valid input by user;
+     */
     protected static int acceptInt(Scanner input) {
         int intResult;
         while (true) {
@@ -51,7 +55,7 @@ public class Helper {
                 intResult = Integer.parseInt(input.nextLine().replaceAll("\\s+", ""));
                 return intResult;
             } catch (NumberFormatException e) {
-                System.out.println("That's not one of the options. Try again!");
+                System.out.println("That's not a valid input. Try again!");
             }
         }
     }

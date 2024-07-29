@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 import model.*;
@@ -72,6 +74,23 @@ public class Menu {
         System.out.println("\nPlease type 1 to edit the title, 2 to edit the content, or 3 to edit the mood:");
         // TODO: tell users that each entry has three fields (otherwise they will be
         // confused here because they didn't enter a mood)
+        // ArrayList<Integer> options = new ArrayList<>();
+        // Collections.addAll(options, 1, 2, 3);
+        // switch (Helper.acceptInt(input)) {
+        //     case 1:
+        //         editTitle(input, entry);
+        //         break;
+        //     case 2:
+        //         editContent(input, entry, journal);
+        //         break;
+        //     case 3:
+        //         editMood(input, entry);
+        //         break;
+        //     default:
+        //         System.out.println("Squeak! That wasn't one of the options. Let's try again.");
+        //         edit(input, journal);
+        //         break;
+        // }
         int action = input.nextInt();
         input.nextLine(); // Consume newline left-over
         if (action == 1) {
