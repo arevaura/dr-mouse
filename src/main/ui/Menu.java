@@ -71,7 +71,7 @@ public class Menu {
         Entry entry = Helper.selectEntry(input, journal);
         System.out.println("\nPlease type 1 to edit the title, 2 to edit the content, or 3 to edit the mood:");
         // TODO: tell users that each entry has three fields (otherwise they will be
-        // confused here bc they didn't enter a mood)
+        // confused here because they didn't enter a mood)
         int action = input.nextInt();
         input.nextLine(); // Consume newline left-over
         if (action == 1) {
@@ -105,18 +105,20 @@ public class Menu {
      */
     private static void editContent(Scanner input, Entry entry, Journal journal) {
         System.out.println("Would you like to restart the entry (1) or continue it (2)?");
-        int answer = input.nextInt();
-        if (answer == 1) {
-            System.out.println("Please enter the new text for your log entry:");
-            entry.setContent(input.nextLine());
-        } else if (answer == 2) {
-            String original = entry.getContent();
-            System.out.println("Here is your original entry:\n" + original);
-            System.out.println("\nPlease continue the text for your log entry:");
-            entry.setContent(original + input.nextLine());
-        } else {
-            System.out.println("\nSorry! You have to choose between 1 and 2. Let's try that again...");
-            edit(input, journal);
+        switch (Helper.acceptInt(input)) {
+            case 1:
+                System.out.println("Please enter the new text for your log entry:");
+                entry.setContent(input.nextLine());
+                break;
+            case 2:
+                String original = entry.getContent();
+                System.out.println("Here is your original entry:\n" + original);
+                System.out.println("\nPlease continue the text for your log entry (starts on a new line):");
+                entry.setContent(original + "\n[EDIT] " + input.nextLine());
+                break;
+            default:
+                System.out.println("Error: Something went wrong while editing entry.");
+                break;
         }
     }
 

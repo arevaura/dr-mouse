@@ -16,11 +16,11 @@ public class Helper {
     protected static void printEntries(List<Entry> entries) {
         for (Entry entry : entries) {
             System.out.println("Date: " + entry.getDate());
-            if (entry.getTitle() != null) {
+            if (entry.getTitle() != "") {
                 System.out.println("~ " + entry.getTitle() + " ~");
             }
             System.out.println(entry.getContent());
-            if (entry.getMood() != null) {
+            if (entry.getMood() != "") {
                 System.out.println("Mood: " + entry.getMood());
             }
             System.out.println("----------\n");
@@ -42,5 +42,17 @@ public class Helper {
         System.out.println("Success! You have selected the following entry:");
         System.out.println("\"" + entry.getContent() + "\"");
         return entry;
+    }
+
+    protected static int acceptInt(Scanner input) {
+        int intResult;
+        while (true) {
+            try {
+                intResult = Integer.parseInt(input.nextLine().replaceAll("\\s+", ""));
+                return intResult;
+            } catch (NumberFormatException e) {
+                System.out.println("That's not one of the options. Try again!");
+            }
+        }
     }
 }
