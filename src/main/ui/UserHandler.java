@@ -25,7 +25,8 @@ public class UserHandler {
      * A menu of options is given for the user's reference.
      */
     public UserHandler() throws IOException, FileNotFoundException {
-        System.out.println("Would you like to load saved data?"); // TODO: figure out why this doesn't compute
+        input.nextLine(); // consumes .read() from Main.java
+        System.out.println("Would you like to load saved data?"); 
         System.out.println("Enter \"yes\" to load.\nOtherwise, enter anything to proceed with an empty journal.");
         String response = input.nextLine().toLowerCase();
         if (response.equals("yes")) {
@@ -96,7 +97,7 @@ public class UserHandler {
      * EFFECTS: sets user up to choose menu action from available choices;
      */
     private Boolean chooseAction() {
-        Terminal.clearScreen();
+        //Terminal.clearScreen(); // TODO: remove?
         printMenuOptions();
         return userSelectsFromMenu();
     }
@@ -105,7 +106,7 @@ public class UserHandler {
      * EFFECTS: prompts user to choose action and follows throught with command;
      */
     private Boolean userSelectsFromMenu() {
-        switch (input.nextLine().toLowerCase()) {
+        switch (input.nextLine().toLowerCase()) { // TODO: switch input reqs to contains words vs exact
             case "exit":
                 return Menu.exit();
             case "save":
