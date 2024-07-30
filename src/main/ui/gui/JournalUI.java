@@ -1,5 +1,8 @@
 package ui.gui;
 
+import java.awt.*;
+import java.awt.event.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
@@ -13,24 +16,27 @@ import javax.swing.JTextField;
 import model.Entry;
 import model.Journal;
 
-public class JournalUI extends JFrame {
+public class JournalUI extends JFrame implements ActionListener {
 
     private Journal journal;
     private ArrayList<Entry> entries;
+    private Entry entry;
+    private String title;
+    private String content;
+    private String mood;
 
-    JLabel dateLabel; // TODO: make all fields private
-    JLabel titleLabel;
+    JLabel dateLabel; 
+    JLabel titleLabel; // TODO: make all fields private
     JLabel contentLabel;
     JLabel moodLabel;
 
-    JLabel viewLabel;
-
-    JTextField dateText;
+    // JTextField dateText;
     JTextField titleText;
     JTextField contentText;
     JTextField moodText;
 
     JButton addEntryButton;
+    JButton viewButton;
     JList<String> allTitle;
     DefaultListModel<String> data;
     JPanel journalPanel;
@@ -52,25 +58,28 @@ public class JournalUI extends JFrame {
         initText();
 
         addEntryButton = new JButton("Add");
+        viewButton = new JButton("View Entries");
 
         allTitle = new JList<>();
         data = new DefaultListModel<>();
         journal = new Journal();
         entries = journal.getEntries();
-
         for (Entry entry : entries) {
             data.addElement(entry.getTitle()); // has to take in a string because data rn is list of string
         }
+        allTitle.setModel(data);
 
         journalPanel = new JPanel();
 
         addAllToPanel();
+        addEntryButton.addActionListener(this);
+        viewButton.addActionListener(this);
         add(journalPanel);
     }
 
     private void addAllToPanel() {
         journalPanel.add(dateLabel);
-        journalPanel.add(dateText);
+        // journalPanel.add(dateText);
         journalPanel.add(titleLabel);
         journalPanel.add(titleText);
         journalPanel.add(contentLabel);
@@ -79,24 +88,46 @@ public class JournalUI extends JFrame {
         journalPanel.add(moodText);
 
         journalPanel.add(addEntryButton);
-
-        journalPanel.add(viewLabel);
+        journalPanel.add(viewButton);
+        journalPanel.add(allTitle);
     }
 
     private void initLabels() {
-        dateLabel = new JLabel("Date");
+        dateLabel = new JLabel("Fill in the boxes below and submit to create a new entry (content necessary)." + LocalDate.now().toString());
         titleLabel = new JLabel("Title");
         contentLabel = new JLabel("Content");
         moodLabel = new JLabel("Mood");
-
-        viewLabel = new JLabel("View All Journals");
     }
 
     private void initText() {
         textSize = 50;
-        dateText = new JTextField(textSize);
-        titleText = new JTextField(textSize);
+        // dateText = new JTextField(textSize-10);
+        titleText = new JTextField(textSize-5);
         contentText = new JTextField(textSize);
-        moodText = new JTextField(textSize);
+        moodText = new JTextField(textSize-10);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        if (event.getSource() == addEntryButton) {
+            title = titleText.getText();
+            // date = dateText.getDate();
+            // content = contentText.getContent();
+            // mood = moodText.getMood();
+
+            entry = new Entry(content);
+            entry.setTitle(title);
+            entry.setMood(mood);
+
+            journal.addEntry(entry);
+            clearFields();
+        }
+    }
+
+    private void clearFields() {
+        // dateText.setText("");
+        titleText.setText("");
+        contentText.setText("");
+        moodText.setText("");
     }
 }
