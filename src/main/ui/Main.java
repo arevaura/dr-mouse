@@ -2,11 +2,15 @@ package ui;
 
 import java.io.FileNotFoundException;
 
+import ui.gui.JournalUI;
+
 /**
  * Represents the main class that runs the program.
  */
 public class Main {
     public static void main(String[] args) throws Exception {
+        new JournalUI();
+
         Terminal.clearScreen();
         ;
         System.out.println("Welcome, Dr. Mouse says hello!\n~squeak =.="); // welcome message

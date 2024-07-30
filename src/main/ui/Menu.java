@@ -75,19 +75,20 @@ public class Menu {
         // ArrayList<Integer> options = new ArrayList<>();
         // Collections.addAll(options, 1, 2, 3);
         // switch (Helper.acceptInt(input)) {
-        //     case 1:
-        //         editTitle(input, entry);
-        //         break;
-        //     case 2:
-        //         editContent(input, entry, journal);
-        //         break;
-        //     case 3:
-        //         editMood(input, entry);
-        //         break;
-        //     default:
-        //         System.out.println("Squeak! That wasn't one of the options. Let's try again.");
-        //         edit(input, journal);
-        //         break;
+        // case 1:
+        // editTitle(input, entry);
+        // break;
+        // case 2:
+        // editContent(input, entry, journal);
+        // break;
+        // case 3:
+        // editMood(input, entry);
+        // break;
+        // default:
+        // System.out.println("Squeak! That wasn't one of the options. Let's try
+        // again.");
+        // edit(input, journal);
+        // break;
         // }
         int action = input.nextInt();
         input.nextLine(); // Consume newline left-over

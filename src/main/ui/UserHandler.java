@@ -26,7 +26,7 @@ public class UserHandler {
      */
     public UserHandler() throws IOException, FileNotFoundException {
         input.nextLine(); // consumes .read() from Main.java
-        System.out.println("Would you like to load saved data?"); 
+        System.out.println("Would you like to load saved data?");
         System.out.println("Enter \"yes\" to load.\nOtherwise, enter anything to proceed with an empty journal.");
         String response = input.nextLine().toLowerCase();
         if (response.equals("yes")) {
