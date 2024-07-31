@@ -27,21 +27,21 @@ public class JournalUI extends JFrame implements ActionListener {
     private String content;
     private String mood;
 
-    JLabel dateLabel; 
-    JLabel titleLabel; // TODO: make all fields private
-    JLabel contentLabel;
-    JLabel moodLabel;
+    private JLabel dateLabel; 
+    private JLabel titleLabel;
+    private JLabel contentLabel;
+    private JLabel moodLabel;
 
-    // JTextField dateText;
-    JTextField titleText;
-    JTextArea contentText;
-    JTextField moodText;
+    // private JTextField dateText;
+    private JTextField titleText;
+    private JTextArea contentText;
+    private JTextField moodText;
 
-    JButton addEntryButton;
-    JButton viewButton;
-    JList<String> allTitle;
-    DefaultListModel<String> data;
-    JPanel mainPanel;
+    private JButton addEntryButton;
+    private JButton viewButton;
+    private JList<String> allTitle;
+    private DefaultListModel<String> data;
+    private JPanel mainPanel;
 
     int textSize;
 
