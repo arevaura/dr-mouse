@@ -6,11 +6,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import model.Entry;
@@ -32,23 +34,25 @@ public class JournalUI extends JFrame implements ActionListener {
 
     // JTextField dateText;
     JTextField titleText;
-    JTextField contentText;
+    JTextArea contentText;
     JTextField moodText;
 
     JButton addEntryButton;
     JButton viewButton;
     JList<String> allTitle;
     DefaultListModel<String> data;
-    JPanel journalPanel;
+    JPanel mainPanel;
 
     int textSize;
 
     public JournalUI() { // TODO: write documentation for every method
         super("Dr. Mouse"); // name of desktop window that pops up
+        ImageIcon img = new ImageIcon("./graphics/icon.png");
+        setIconImage(img.getImage());
 
         init();
 
-        setSize(530, 500); // try getPreferredSize()
+        setSize(530, 500); // try getPreferredSize() // TODO: make fixed window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -57,7 +61,7 @@ public class JournalUI extends JFrame implements ActionListener {
         initLabels();
         initText();
 
-        addEntryButton = new JButton("Add");
+        addEntryButton = new JButton("Submit Entry");
         viewButton = new JButton("View Entries");
 
         allTitle = new JList<>();
@@ -69,27 +73,27 @@ public class JournalUI extends JFrame implements ActionListener {
         }
         allTitle.setModel(data);
 
-        journalPanel = new JPanel();
+        mainPanel = new JPanel();
 
-        addAllToPanel();
+        addAllToMain();
         addEntryButton.addActionListener(this);
         viewButton.addActionListener(this);
-        add(journalPanel);
+        add(mainPanel);
     }
 
-    private void addAllToPanel() {
-        journalPanel.add(dateLabel);
-        // journalPanel.add(dateText);
-        journalPanel.add(titleLabel);
-        journalPanel.add(titleText);
-        journalPanel.add(contentLabel);
-        journalPanel.add(contentText);
-        journalPanel.add(moodLabel);
-        journalPanel.add(moodText);
+    private void addAllToMain() {
+        mainPanel.add(dateLabel, BorderLayout.PAGE_START);
+        // mainPanel.add(dateText);
+        mainPanel.add(titleLabel);
+        mainPanel.add(titleText);
+        mainPanel.add(contentLabel);
+        mainPanel.add(contentText);
+        mainPanel.add(moodLabel);
+        mainPanel.add(moodText);
 
-        journalPanel.add(addEntryButton);
-        journalPanel.add(viewButton);
-        journalPanel.add(allTitle);
+        mainPanel.add(addEntryButton);
+        mainPanel.add(viewButton);
+        mainPanel.add(allTitle);
     }
 
     private void initLabels() {
@@ -103,7 +107,9 @@ public class JournalUI extends JFrame implements ActionListener {
         textSize = 50;
         // dateText = new JTextField(textSize-10);
         titleText = new JTextField(textSize-5);
-        contentText = new JTextField(textSize);
+        contentText = new JTextArea("REQUIRED: Click to edit.", 3, 50);
+        // contentText.setFont();
+        contentText.setWrapStyleWord(true); // makes sure box doesn't shrink when no text present
         moodText = new JTextField(textSize-10);
     }
 
@@ -112,7 +118,7 @@ public class JournalUI extends JFrame implements ActionListener {
         if (event.getSource() == addEntryButton) {
             title = titleText.getText();
             // date = dateText.getDate();
-            // content = contentText.getContent();
+            content = contentText.getText();
             // mood = moodText.getMood();
 
             entry = new Entry(content);
@@ -122,6 +128,12 @@ public class JournalUI extends JFrame implements ActionListener {
             journal.addEntry(entry);
             clearFields();
         }
+
+        if (event.getSource() == viewButton) {
+            removeFields();
+            mainPanel.add(contentText);
+            // use replaceRange to set text of JTextArea contentText
+        }
     }
 
     private void clearFields() {
@@ -129,5 +141,19 @@ public class JournalUI extends JFrame implements ActionListener {
         titleText.setText("");
         contentText.setText("");
         moodText.setText("");
+    }
+
+    private void removeFields() {
+        mainPanel.remove(dateLabel);
+        // mainPanel.remove(dateText);
+        mainPanel.remove(titleLabel);
+        mainPanel.remove(titleText);
+        mainPanel.remove(contentLabel);
+        mainPanel.remove(contentText);
+        mainPanel.remove(moodLabel);
+        mainPanel.remove(moodText);
+        mainPanel.remove(addEntryButton);
+        mainPanel.remove(viewButton);
+        update(getGraphics());
     }
 }
