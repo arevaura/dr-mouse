@@ -38,7 +38,9 @@ public class JournalUI extends JFrame implements ActionListener {
     private JTextField moodText;
 
     private JButton addEntryButton;
-    private JButton viewButton;
+    private JButton viewEntriesButton;
+    private JButton viewFormButton;
+
     private JList<String> allTitle;
     private DefaultListModel<String> data;
     private JPanel mainPanel;
@@ -62,7 +64,8 @@ public class JournalUI extends JFrame implements ActionListener {
         initText();
 
         addEntryButton = new JButton("Submit Entry");
-        viewButton = new JButton("View Entries");
+        viewEntriesButton = new JButton("View Entries");
+        viewFormButton = new JButton("Write Entry");
 
         allTitle = new JList<>();
         data = new DefaultListModel<>();
@@ -77,7 +80,8 @@ public class JournalUI extends JFrame implements ActionListener {
 
         addAllToMain();
         addEntryButton.addActionListener(this);
-        viewButton.addActionListener(this);
+        viewEntriesButton.addActionListener(this);
+        viewFormButton.addActionListener(this);
         add(mainPanel);
     }
 
@@ -92,8 +96,12 @@ public class JournalUI extends JFrame implements ActionListener {
         mainPanel.add(moodText);
 
         mainPanel.add(addEntryButton);
-        mainPanel.add(viewButton);
+        mainPanel.add(viewEntriesButton);
         mainPanel.add(allTitle);
+
+        // mainPanel.setVisible(true);
+        contentText.requestFocusInWindow();
+        update();
     }
 
     private void initLabels() {
@@ -129,11 +137,25 @@ public class JournalUI extends JFrame implements ActionListener {
             clearFields();
         }
 
-        if (event.getSource() == viewButton) {
+        if (event.getSource() == viewEntriesButton) {
             removeFields();
-            mainPanel.add(contentText);
-            // use replaceRange to set text of JTextArea contentText
+            mainPanel.add(viewFormButton);
+            update();
         }
+
+        if (event.getSource() == viewFormButton) {
+            removeFields();
+            mainPanel.remove(viewFormButton);
+            addAllToMain();
+            update();
+        }
+    }
+
+    private void update() {
+        update(getGraphics());
+        this.pack();
+        setSize(530, 500);
+        mainPanel.setVisible(true);
     }
 
     private void clearFields() {
@@ -153,7 +175,7 @@ public class JournalUI extends JFrame implements ActionListener {
         mainPanel.remove(moodLabel);
         mainPanel.remove(moodText);
         mainPanel.remove(addEntryButton);
-        mainPanel.remove(viewButton);
-        update(getGraphics());
+        mainPanel.remove(viewEntriesButton);
+        update();
     }
 }
