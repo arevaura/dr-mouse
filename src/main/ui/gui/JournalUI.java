@@ -5,11 +5,8 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,7 +15,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.Spring;
 import javax.swing.SpringLayout;
 import javax.swing.event.ListSelectionListener;
 
@@ -40,7 +36,6 @@ public class JournalUI extends JFrame implements ActionListener {
     private JsonReader jsonReader = new JsonReader(JSON_STORE);
 
     private Journal journal;
-    private ArrayList<Entry> entries;
     private Entry entry;
 
     private String title;
@@ -60,17 +55,16 @@ public class JournalUI extends JFrame implements ActionListener {
     private JButton saveButton;
     private JButton viewFormButton;
     private JButton addEntryButton;
+    private JButton removeEntryButton;
+    private Boolean isRemoveEntryButtonClicked;
     private JButton viewEntriesButton;
-
-    // private JList<String> allTitle; // TODO: what does this do again: list of all titles of entries in journal
-    // private DefaultListModel<String> data;
 
     private JPanel homePage; // page with just buttons, redirect page BOXLAYOUT
     private JPanel formPage; // page for adding new entry BORDERLAYOUT
     private JPanel entryPanel; // section for entering entry info SPRINGLAYOUT
     private JPanel buttonPanel; // section for showing button options FLOWLAYOUT
     private JPanel logPage; // page to see log entries BORDERLAYOUT
-    private JList<JPanel> entriesList; // section to view entries and let user select one JLIST
+    private JList<Entry> entriesList; // section to view entries and let user select one JLIST
 
     static final int TEXT_SIZE = 50;
     static final int APP_WIDTH = 600;
@@ -81,7 +75,7 @@ public class JournalUI extends JFrame implements ActionListener {
     /*
      * EFFECTS: creates a new journal user interface with a window that pops up;
      */
-    public JournalUI() { // TODO: do I need to create a JFrame field, run setContentPanel() etc.?
+    public JournalUI() {
         super("Dr. Mouse"); // name of desktop window that pops up
         setAppIcon();
         initAll();
@@ -110,20 +104,16 @@ public class JournalUI extends JFrame implements ActionListener {
      */
     private void initAll() {
         journal = new Journal();
-        entries = journal.getEntries();
 
         initButtons();
+        buttonPanel = new JPanel();
+        FlowLayout flowLayout = new FlowLayout();
+        flowLayout.setAlignment(FlowLayout.CENTER);
+        buttonPanel.setLayout(flowLayout);
         
         setUpHomePage();
         setUpFormPage();
         setUpLogPage();
-
-        // allTitle = new JList<>();
-        // data = new DefaultListModel<>();
-        // for (Entry entry : entries) {
-        //     data.addElement(entry.getTitle()); // has to take in a string because data rn is list of string
-        // }
-        // allTitle.setModel(data);
     }
 
     /*
@@ -136,8 +126,6 @@ public class JournalUI extends JFrame implements ActionListener {
 
         ImageIcon image = new ImageIcon("./graphics/confusedmouse.jpg");
         homePage.add(new JLabel(image));
-        // Graphics g = new Image();
-        // g.drawImage(image.getImage(), 0, 0, null);
 
         homePage.add(new JLabel("Welcome to Dr. Mouse!"));
         homePage.add(Box.createRigidArea(new Dimension(0, 30)));
@@ -195,6 +183,10 @@ public class JournalUI extends JFrame implements ActionListener {
 
         addEntryButton = new JButton("Submit Entry");
         addEntryButton.addActionListener(this);
+
+        removeEntryButton = new JButton("Delete Selected Entry");
+        removeEntryButton.addActionListener(this);
+        isRemoveEntryButtonClicked = false;
 
         viewEntriesButton = new JButton("View Entries");
         viewEntriesButton.addActionListener(this);
@@ -270,6 +262,8 @@ public class JournalUI extends JFrame implements ActionListener {
             checkViewEntriesButton();
         } else if (source == addEntryButton) {
             checkAddEntryButton();
+        } else if (source == removeEntryButton) {
+            isRemoveEntryButtonClicked = true;
         } else {
             System.out.println("Sorry, there's no corresponding action for this event.");
             System.out.println("Try checking the JournalUI.actionPerformed() method!");
@@ -291,42 +285,44 @@ public class JournalUI extends JFrame implements ActionListener {
      * -------- journal's entire entry log if it was;
      */
     private void checkViewEntriesButton() {
-        logPage.add(viewFormButton, BorderLayout.PAGE_START);
-
-        JList<Entry> entriesList = new JList<>(journal.getEntries().toArray(new Entry[0]));
-        logPage.add(entriesList, BorderLayout.PAGE_END);
+        // TOP: button to go to form page
+        buttonPanel.add(viewFormButton);
+        buttonPanel.add(removeEntryButton);
+        logPage.add(buttonPanel, BorderLayout.PAGE_START);
         
+        // MIDDLE: fields to display selected entry
         initFormTexts();
         JPanel entryPanel = new JPanel();
-        SpringLayout layout = new SpringLayout();
-        entryPanel.setLayout(layout);
-        entryPanel.add(dateLabel);
-        dateLabel.setText("Date: " + LocalDate.now().toString());
-        layout.putConstraint(SpringLayout.WEST, dateLabel, 5, SpringLayout.WEST, entryPanel);
-        layout.putConstraint(SpringLayout.NORTH, dateLabel, 5, SpringLayout.NORTH, entryPanel);
-        entryPanel.add(titleLabel);
-        layout.putConstraint(SpringLayout.WEST, titleLabel, 5, SpringLayout.WEST, entryPanel);
-        layout.putConstraint(SpringLayout.NORTH, titleLabel, 5, SpringLayout.SOUTH, dateLabel);
-        entryPanel.add(titleText);
-        layout.putConstraint(SpringLayout.WEST, titleText, 5, SpringLayout.EAST, titleLabel);
-        layout.putConstraint(SpringLayout.NORTH, titleText, 5, SpringLayout.SOUTH, dateLabel);
-        entryPanel.add(contentLabel);
-        layout.putConstraint(SpringLayout.WEST, contentLabel, 5, SpringLayout.WEST, entryPanel);
-        layout.putConstraint(SpringLayout.NORTH, contentLabel, 5, SpringLayout.SOUTH, titleLabel);
-        entryPanel.add(contentText);
-        layout.putConstraint(SpringLayout.WEST, contentText, 5, SpringLayout.EAST, contentLabel);
-        layout.putConstraint(SpringLayout.NORTH, contentText, 5, SpringLayout.SOUTH, titleLabel);
-        entryPanel.add(moodLabel);
-        layout.putConstraint(SpringLayout.WEST, moodLabel, 5, SpringLayout.WEST, entryPanel);
-        layout.putConstraint(SpringLayout.NORTH, moodLabel, 35, SpringLayout.SOUTH, contentLabel);
-        entryPanel.add(moodText);
-        layout.putConstraint(SpringLayout.WEST, moodText, 5, SpringLayout.EAST, moodLabel);
-        layout.putConstraint(SpringLayout.NORTH, moodText, 35, SpringLayout.SOUTH, contentLabel);
+        SpringLayout springLayout = new SpringLayout();
+        entryPanel.setLayout(springLayout);
+        populateEntryPanelOnLogPage(entryPanel);
+        setEntryPanelConstraints(entryPanel, springLayout);
         logPage.add(entryPanel, BorderLayout.CENTER);
+        
+        // BOTTOM: list of entries to select
+        JList<Entry> entriesList = new JList<>(journal.getEntries().toArray(new Entry[0]));
+        logPage.add(entriesList, BorderLayout.PAGE_END);
 
+        // when entry is selected, display entry info
+        watchSelectionList(entriesList);
+
+        update();
+    }
+
+    /*
+     * MODIFIES: this
+     * EFFECTS: watches the selection list of entries and updates the journal
+     * -------- user interface accordingly;
+     */
+    private void watchSelectionList(JList<Entry> entriesList) {
         entriesList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent e) {
+                if (isRemoveEntryButtonClicked) {
+                    journal.removeEntry(entriesList.getSelectedValue());
+                    update();
+                    isRemoveEntryButtonClicked = false;
+                }
                 Entry selectedEntry = entriesList.getSelectedValue();
                 initFormLabels();
                 dateLabel.setText("Date: " + selectedEntry.getDate());
@@ -335,8 +331,43 @@ public class JournalUI extends JFrame implements ActionListener {
                 moodText.setText(selectedEntry.getMood());
             }
         });
-        
-        update();
+    }
+
+    /*
+     * MODIFIES: this
+     * EFFECTS: populates the entry panel of the journal user interface with the
+     * -------- necessary labels and text fields;
+     */
+    private void populateEntryPanelOnLogPage(JPanel entryPanel) {
+        entryPanel.add(dateLabel);
+        dateLabel.setText("Date: " + LocalDate.now().toString());
+        entryPanel.add(titleLabel);
+        entryPanel.add(titleText);
+        entryPanel.add(contentLabel);
+        entryPanel.add(contentText);
+        entryPanel.add(moodLabel);
+        entryPanel.add(moodText);
+    }
+
+    /*
+     * MODIFIES: this
+     * EFFECTS: sets the constraints for the entry panel of the journal user interface;
+     */
+    private void setEntryPanelConstraints(JPanel entryPanel, SpringLayout springLayout) {
+        springLayout.putConstraint(SpringLayout.WEST, dateLabel, 5, SpringLayout.WEST, entryPanel);
+        springLayout.putConstraint(SpringLayout.NORTH, dateLabel, 5, SpringLayout.NORTH, entryPanel);
+        springLayout.putConstraint(SpringLayout.WEST, titleLabel, 5, SpringLayout.WEST, entryPanel);
+        springLayout.putConstraint(SpringLayout.NORTH, titleLabel, 5, SpringLayout.SOUTH, dateLabel);
+        springLayout.putConstraint(SpringLayout.WEST, titleText, 5, SpringLayout.EAST, titleLabel);
+        springLayout.putConstraint(SpringLayout.NORTH, titleText, 5, SpringLayout.SOUTH, dateLabel);
+        springLayout.putConstraint(SpringLayout.WEST, contentLabel, 5, SpringLayout.WEST, entryPanel);
+        springLayout.putConstraint(SpringLayout.NORTH, contentLabel, 5, SpringLayout.SOUTH, titleLabel);
+        springLayout.putConstraint(SpringLayout.WEST, contentText, 5, SpringLayout.EAST, contentLabel);
+        springLayout.putConstraint(SpringLayout.NORTH, contentText, 5, SpringLayout.SOUTH, titleLabel);
+        springLayout.putConstraint(SpringLayout.WEST, moodLabel, 5, SpringLayout.WEST, entryPanel);
+        springLayout.putConstraint(SpringLayout.NORTH, moodLabel, 35, SpringLayout.SOUTH, contentLabel);
+        springLayout.putConstraint(SpringLayout.WEST, moodText, 5, SpringLayout.EAST, moodLabel);
+        springLayout.putConstraint(SpringLayout.NORTH, moodText, 35, SpringLayout.SOUTH, contentLabel);
     }
 
     /*
@@ -377,15 +408,6 @@ public class JournalUI extends JFrame implements ActionListener {
         titleText.setText("");
         contentText.setText("");
         moodText.setText("");
-    }
-
-    /*
-     * MODIFIES: this
-     * EFFECTS: removes all the components of the journal user interface;
-     */
-    private void removeAllComponents() {
-        formPage.removeAll();
-        update();
     }
 
     /*
