@@ -2,9 +2,12 @@ package ui.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -13,11 +16,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.Spring;
+import javax.swing.SpringLayout;
+import javax.swing.event.ListSelectionListener;
+
 import model.Entry;
 import model.Journal;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 /*
  * EFFECTS: Represents the graphical user interface for the journal application; 
@@ -26,6 +34,10 @@ import model.Journal;
 public class JournalUI extends JFrame implements ActionListener {
 
     // ==========--FIELDS--==========
+
+    private static final String JSON_STORE = "./data/journal.json";
+    private JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
+    private JsonReader jsonReader = new JsonReader(JSON_STORE);
 
     private Journal journal;
     private ArrayList<Entry> entries;
@@ -40,22 +52,25 @@ public class JournalUI extends JFrame implements ActionListener {
     private JLabel contentLabel;
     private JLabel moodLabel;
 
-    // private JTextField dateText;
     private JTextField titleText;
     private JTextArea contentText;
     private JTextField moodText;
 
+    private JButton loadButton;
+    private JButton saveButton;
+    private JButton viewFormButton;
     private JButton addEntryButton;
     private JButton viewEntriesButton;
-    private JButton viewFormButton;
 
-    private JList<String> allTitle; // TODO: what does this do again: list of all titles of entries in journal
-    private DefaultListModel<String> data;
+    // private JList<String> allTitle; // TODO: what does this do again: list of all titles of entries in journal
+    // private DefaultListModel<String> data;
 
-    private JPanel homePanel; // just buttons, redirect page BOXLAYOUT
-    private JPanel formPanel; // for adding new entry
-    private JPanel logPanel; // to see log entries
-    private JPanel buttonPanel;
+    private JPanel homePage; // page with just buttons, redirect page BOXLAYOUT
+    private JPanel formPage; // page for adding new entry BORDERLAYOUT
+    private JPanel entryPanel; // section for entering entry info SPRINGLAYOUT
+    private JPanel buttonPanel; // section for showing button options FLOWLAYOUT
+    private JPanel logPage; // page to see log entries BORDERLAYOUT
+    private JList<JPanel> entriesList; // section to view entries and let user select one JLIST
 
     static final int TEXT_SIZE = 50;
     static final int APP_WIDTH = 600;
@@ -71,7 +86,7 @@ public class JournalUI extends JFrame implements ActionListener {
         setAppIcon();
         initAll();
         setLocation(400, 200); // positions window on desktop at given x and y coordinates
-        setResizable(false); // prevents user from resizing window
+        // setResizable(false); // prevents user from resizing window
         setSize(APP_WIDTH, APP_HEIGHT); // sets size of window
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,60 +109,102 @@ public class JournalUI extends JFrame implements ActionListener {
      * EFFECTS: initializes all the components of the journal user interface;
      */
     private void initAll() {
-        initLabels();
-        initTexts();
-
-        addEntryButton = new JButton("Submit Entry");
-        viewEntriesButton = new JButton("View Entries");
-        viewFormButton = new JButton("Write Entry");
-
-        allTitle = new JList<>();
-        data = new DefaultListModel<>();
         journal = new Journal();
         entries = journal.getEntries();
-        for (Entry entry : entries) {
-            data.addElement(entry.getTitle()); // has to take in a string because data rn is list of string
-        }
-        allTitle.setModel(data);
 
-        formPanel = new JPanel();
-        // formPanel.setLayout(new BorderLayout());
+        initButtons();
+        
+        setUpHomePage();
+        setUpFormPage();
+        setUpLogPage();
 
-        addAllToMain();
-        addEntryButton.addActionListener(this);
-        viewEntriesButton.addActionListener(this);
-        viewFormButton.addActionListener(this);
-        add(formPanel);
+        // allTitle = new JList<>();
+        // data = new DefaultListModel<>();
+        // for (Entry entry : entries) {
+        //     data.addElement(entry.getTitle()); // has to take in a string because data rn is list of string
+        // }
+        // allTitle.setModel(data);
     }
 
     /*
      * MODIFIES: this
-     * EFFECTS: adds all the components to the main panel;
+     * EFFECTS: sets up the home page of the journal user interface;
      */
-    private void addAllToMain() {
-        formPanel.add(dateLabel);
-        // mainPanel.add(dateText);
-        formPanel.add(titleLabel);
-        formPanel.add(titleText);
-        formPanel.add(contentLabel);
-        formPanel.add(contentText);
-        formPanel.add(moodLabel);
-        formPanel.add(moodText);
+    private void setUpHomePage() {
+        homePage = new JPanel();
+        homePage.setLayout(new BoxLayout(homePage, BoxLayout.Y_AXIS));
 
-        formPanel.add(addEntryButton);
-        formPanel.add(viewEntriesButton);
-        formPanel.add(allTitle);
+        ImageIcon image = new ImageIcon("./graphics/confusedmouse.jpg");
+        homePage.add(new JLabel(image));
+        // Graphics g = new Image();
+        // g.drawImage(image.getImage(), 0, 0, null);
 
-        // mainPanel.setVisible(true);
-        contentText.requestFocusInWindow();
-        update();
+        homePage.add(new JLabel("Welcome to Dr. Mouse!"));
+        homePage.add(Box.createRigidArea(new Dimension(0, 30)));
+        homePage.add(viewFormButton);
+        homePage.add(Box.createRigidArea(new Dimension(0, 15)));
+        homePage.add(viewEntriesButton);
+        homePage.add(Box.createRigidArea(new Dimension(0, 30)));
+        homePage.add(loadButton);
+
+        add(homePage);
+        homePage.setVisible(true);
+    }
+
+    /*
+     * MODIFIES: this
+     * EFFECTS: sets up the form page of the journal user interface;
+     */
+    private void setUpFormPage() {
+        formPage = new JPanel();
+        formPage.setLayout(new BorderLayout());
+
+        initFormLabels();
+        initFormTexts();
+        addComponentsToFormPage();
+
+        add(formPage);
+        formPage.setVisible(false);
+    }
+
+    /*
+     * MODIFIES: this
+     * EFFECTS: sets up the log page of the journal user interface;
+     */
+    private void setUpLogPage() {
+        logPage = new JPanel();
+        logPage.setLayout(new BorderLayout());
+
+        add(logPage);
+        logPage.setVisible(false);
+    }
+
+    /*
+     * MODIFIES: this
+     * EFFECTS: initializes all the buttons of the journal user interface;
+     */
+    private void initButtons() {
+        loadButton = new JButton("Load Saved Entries");
+        loadButton.addActionListener(this);
+
+        saveButton = new JButton("Save Entries");
+        saveButton.addActionListener(this);
+
+        viewFormButton = new JButton("Write Entry");
+        viewFormButton.addActionListener(this);
+
+        addEntryButton = new JButton("Submit Entry");
+        addEntryButton.addActionListener(this);
+
+        viewEntriesButton = new JButton("View Entries");
+        viewEntriesButton.addActionListener(this);
     }
 
     /*
      * MODIFIES: this
      * EFFECTS: initializes all the labels of the journal user interface;
      */
-    private void initLabels() {
+    private void initFormLabels() {
         dateLabel = new JLabel("Fill in the boxes below and submit to create a new entry (content necessary)."
                 + LocalDate.now().toString());
         titleLabel = new JLabel("Title");
@@ -159,13 +216,35 @@ public class JournalUI extends JFrame implements ActionListener {
      * MODIFIES: this
      * EFFECTS: initializes all the text fields of the journal user interface;
      */
-    private void initTexts() {
-        // dateText = new JTextField(textSize-10);
+    private void initFormTexts() {
         titleText = new JTextField(TEXT_SIZE - 5);
-        contentText = new JTextArea("REQUIRED: Click to edit.", 3, 50);
-        // contentText.setFont();
+        contentText = new JTextArea("REQUIRED: Click to edit.", 3, 58);
         contentText.setWrapStyleWord(true); // makes sure box doesn't shrink when no text present
         moodText = new JTextField(TEXT_SIZE - 10);
+    }
+
+    /*
+     * MODIFIES: this
+     * EFFECTS: adds all the components to the form page panel;
+     */
+    private void addComponentsToFormPage() {
+        formPage.add(dateLabel);
+
+        formPage.add(titleLabel);
+        formPage.add(titleText);
+
+        formPage.add(contentLabel);
+        formPage.add(contentText);
+        
+        formPage.add(moodLabel);
+        formPage.add(moodText);
+
+        formPage.add(addEntryButton);
+        formPage.add(viewEntriesButton);
+        // formPage.add(allTitle);
+
+        contentText.requestFocusInWindow();
+        update();
     }
 
     /*
@@ -175,9 +254,19 @@ public class JournalUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
-        if (source == viewFormButton) {
+        if (source == loadButton) {
+            loadJournal();
+        } else if (source == saveButton) {
+            saveJournal();
+        } else if (source == viewFormButton) {
+            formPage.setVisible(true);
+            homePage.setVisible(false);
+            logPage.setVisible(false);
             checkViewFormButton();
         } else if (source == viewEntriesButton) {
+            logPage.setVisible(true);
+            homePage.setVisible(false);
+            formPage.setVisible(false);
             checkViewEntriesButton();
         } else if (source == addEntryButton) {
             checkAddEntryButton();
@@ -193,9 +282,6 @@ public class JournalUI extends JFrame implements ActionListener {
      * -------- input form of the journal if it was;
      */
     private void checkViewFormButton() {
-        removeAllComponents();
-        formPanel.remove(viewFormButton);
-        addAllToMain();
         update();
     }
 
@@ -205,42 +291,50 @@ public class JournalUI extends JFrame implements ActionListener {
      * -------- journal's entire entry log if it was;
      */
     private void checkViewEntriesButton() {
-        removeAllComponents();
+        logPage.add(viewFormButton, BorderLayout.PAGE_START);
 
-        // ImageIcon image1 = new ImageIcon("./graphics/icon.png");
-        // // formPanel.add(new JLabel(image1));
-        // Graphics g = new Image();
-        // g.drawImage(image1.getImage(), 0, 0, null);
+        JList<Entry> entriesList = new JList<>(journal.getEntries().toArray(new Entry[0]));
+        logPage.add(entriesList, BorderLayout.PAGE_END);
+        
+        initFormTexts();
+        JPanel entryPanel = new JPanel();
+        SpringLayout layout = new SpringLayout();
+        entryPanel.setLayout(layout);
+        entryPanel.add(dateLabel);
+        dateLabel.setText("Date: " + LocalDate.now().toString());
+        layout.putConstraint(SpringLayout.WEST, dateLabel, 5, SpringLayout.WEST, entryPanel);
+        layout.putConstraint(SpringLayout.NORTH, dateLabel, 5, SpringLayout.NORTH, entryPanel);
+        entryPanel.add(titleLabel);
+        layout.putConstraint(SpringLayout.WEST, titleLabel, 5, SpringLayout.WEST, entryPanel);
+        layout.putConstraint(SpringLayout.NORTH, titleLabel, 5, SpringLayout.SOUTH, dateLabel);
+        entryPanel.add(titleText);
+        layout.putConstraint(SpringLayout.WEST, titleText, 5, SpringLayout.EAST, titleLabel);
+        layout.putConstraint(SpringLayout.NORTH, titleText, 5, SpringLayout.SOUTH, dateLabel);
+        entryPanel.add(contentLabel);
+        layout.putConstraint(SpringLayout.WEST, contentLabel, 5, SpringLayout.WEST, entryPanel);
+        layout.putConstraint(SpringLayout.NORTH, contentLabel, 5, SpringLayout.SOUTH, titleLabel);
+        entryPanel.add(contentText);
+        layout.putConstraint(SpringLayout.WEST, contentText, 5, SpringLayout.EAST, contentLabel);
+        layout.putConstraint(SpringLayout.NORTH, contentText, 5, SpringLayout.SOUTH, titleLabel);
+        entryPanel.add(moodLabel);
+        layout.putConstraint(SpringLayout.WEST, moodLabel, 5, SpringLayout.WEST, entryPanel);
+        layout.putConstraint(SpringLayout.NORTH, moodLabel, 35, SpringLayout.SOUTH, contentLabel);
+        entryPanel.add(moodText);
+        layout.putConstraint(SpringLayout.WEST, moodText, 5, SpringLayout.EAST, moodLabel);
+        layout.putConstraint(SpringLayout.NORTH, moodText, 35, SpringLayout.SOUTH, contentLabel);
+        logPage.add(entryPanel, BorderLayout.CENTER);
 
-    //     JPanel viewPanel = new JPanel();
-    //     // Create a scrollbar using JScrollPane and add panel into it's viewport
-    //     //Set vertical and horizontal scrollbar always show
-    //     JScrollPane scrollPanel = new JScrollPane(viewPanel);
-    //     // scrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    //     scrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    //     scrollPanel.setSize(WIDTH, HEIGHT);
-    //     formPanel.add(scrollPanel, BorderLayout.SOUTH);
-    //     // BoxLayout box = new BoxLayout(viewPanel, MAXIMIZED_BOTH);
-        formPanel.add(viewFormButton);
-    //    // formPanel.add(viewPanel, BorderLayout.CENTER);
-
-
-        for (Entry entry : journal.getEntries()) {
-            initLabels();
-            initTexts();
-            formPanel.add(dateLabel);
-            formPanel.add(titleLabel);
-            formPanel.add(titleText);
-            formPanel.add(contentLabel);
-            formPanel.add(contentText);
-            formPanel.add(moodLabel);
-            formPanel.add(moodText);
-            
-            dateLabel.setText(entry.getDate());
-            titleText.setText(entry.getTitle());
-            contentText.setText(entry.getContent());
-            moodText.setText(entry.getMood());
-        }
+        entriesList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(javax.swing.event.ListSelectionEvent e) {
+                Entry selectedEntry = entriesList.getSelectedValue();
+                initFormLabels();
+                dateLabel.setText("Date: " + selectedEntry.getDate());
+                titleText.setText(selectedEntry.getTitle());
+                contentText.setText(selectedEntry.getContent());
+                moodText.setText(selectedEntry.getMood());
+            }
+        });
         
         update();
     }
@@ -252,7 +346,6 @@ public class JournalUI extends JFrame implements ActionListener {
      */
     private void checkAddEntryButton() {
         title = titleText.getText();
-        // date = dateText.getText();
         content = contentText.getText();
         mood = moodText.getText();
 
@@ -261,7 +354,8 @@ public class JournalUI extends JFrame implements ActionListener {
         entry.setMood(mood);
 
         journal.addEntry(entry);
-        clearFields();
+        clearFormFields();
+        update();
     }
 
     /*
@@ -272,15 +366,14 @@ public class JournalUI extends JFrame implements ActionListener {
         update(getGraphics());
         this.pack();
         setSize(APP_WIDTH, APP_HEIGHT);
-        formPanel.setVisible(true);
+        // formPage.setVisible(true);
     }
 
     /*
      * MODIFIES: this
      * EFFECTS: clears all the text fields of the journal user interface;
      */
-    private void clearFields() {
-        // dateText.setText("");
+    private void clearFormFields() {
         titleText.setText("");
         contentText.setText("");
         moodText.setText("");
@@ -291,7 +384,36 @@ public class JournalUI extends JFrame implements ActionListener {
      * EFFECTS: removes all the components of the journal user interface;
      */
     private void removeAllComponents() {
-        formPanel.removeAll();
+        formPage.removeAll();
         update();
+    }
+
+    /*
+     * EFFECTS: saves the journal to file;
+     */
+    private Boolean saveJournal() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(journal);
+            jsonWriter.close();
+            System.out.println("Saved journal to " + JSON_STORE + "! \nSQUEAK");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+        return true;
+    }
+
+    /*
+     * MODIFIES: this;
+     * EFFECTS: loads journal from file;
+     */
+    private Boolean loadJournal() {
+        try {
+            journal = jsonReader.read();
+            System.out.println("Loaded journal from " + JSON_STORE + "! \nSQUEAK");
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+        return true;
     }
 }
