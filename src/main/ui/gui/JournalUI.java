@@ -64,7 +64,6 @@ public class JournalUI extends JFrame implements ActionListener {
     private JPanel entryPanel; // section for entering entry info SPRINGLAYOUT
     private JPanel buttonPanel; // section for showing button options FLOWLAYOUT
     private JPanel logPage; // page to see log entries BORDERLAYOUT
-    private JList<Entry> entriesList; // section to view entries and let user select one JLIST
 
     static final int TEXT_SIZE = 50;
     static final int APP_WIDTH = 600;
@@ -126,6 +125,7 @@ public class JournalUI extends JFrame implements ActionListener {
 
         ImageIcon image = new ImageIcon("./graphics/confusedmouse.jpg");
         homePage.add(new JLabel(image));
+        homePage.add(Box.createRigidArea(new Dimension(0, 15)));
 
         homePage.add(new JLabel("Welcome to Dr. Mouse!"));
         homePage.add(Box.createRigidArea(new Dimension(0, 30)));
@@ -184,7 +184,7 @@ public class JournalUI extends JFrame implements ActionListener {
         addEntryButton = new JButton("Submit Entry");
         addEntryButton.addActionListener(this);
 
-        removeEntryButton = new JButton("Delete Selected Entry");
+        removeEntryButton = new JButton("Delete Entry");
         removeEntryButton.addActionListener(this);
         isRemoveEntryButtonClicked = false;
 
@@ -301,6 +301,7 @@ public class JournalUI extends JFrame implements ActionListener {
         
         // BOTTOM: list of entries to select
         JList<Entry> entriesList = new JList<>(journal.getEntries().toArray(new Entry[0]));
+        // DefaultListModel<Entry> listModel = new DefaultListModel<>(); // TODO
         logPage.add(entriesList, BorderLayout.PAGE_END);
 
         // when entry is selected, display entry info
@@ -318,17 +319,27 @@ public class JournalUI extends JFrame implements ActionListener {
         entriesList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent e) {
-                if (isRemoveEntryButtonClicked) {
-                    journal.removeEntry(entriesList.getSelectedValue());
-                    update();
-                    isRemoveEntryButtonClicked = false;
+                // Check if the event is final to prevent double firing
+                if (!e.getValueIsAdjusting()) {
+                    if (isRemoveEntryButtonClicked) {
+                        journal.removeEntry(entriesList.getSelectedValue());
+                        // System.out.println(journal.getEntries());
+                        entriesList.revalidate();
+                        entriesList.repaint();
+                        // ((DefaultListModel<Entry>)entriesList.getModel()).removeElement(selectedEntry); // TODO
+                        update();
+                        isRemoveEntryButtonClicked = false;
+                    }
+                } else {
+                    Entry selectedEntry = entriesList.getSelectedValue();
+                    if (selectedEntry != null) { // Check if an entry is selected
+                        initFormLabels();
+                        dateLabel.setText("Date: " + selectedEntry.getDate());
+                        titleText.setText(selectedEntry.getTitle());
+                        contentText.setText(selectedEntry.getContent());
+                        moodText.setText(selectedEntry.getMood());
+                    }
                 }
-                Entry selectedEntry = entriesList.getSelectedValue();
-                initFormLabels();
-                dateLabel.setText("Date: " + selectedEntry.getDate());
-                titleText.setText(selectedEntry.getTitle());
-                contentText.setText(selectedEntry.getContent());
-                moodText.setText(selectedEntry.getMood());
             }
         });
     }
