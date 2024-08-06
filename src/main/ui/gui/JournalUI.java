@@ -53,8 +53,10 @@ public class JournalUI extends JFrame implements ActionListener {
     private JButton saveButton;
     private JButton viewFormButton;
     private JButton addEntryButton;
+    private JButton modifyEntryButton;
     private JButton removeEntryButton;
-    private Boolean isRemoveEntryButtonClicked;
+    private boolean modifyEntryButtonClicked;
+    private boolean removeEntryButtonClicked;
     private JButton viewEntriesButton;
 
     private JPanel homePage; // page with just buttons, redirect page BOXLAYOUT
@@ -202,9 +204,13 @@ public class JournalUI extends JFrame implements ActionListener {
         addEntryButton = new JButton("Submit Entry");
         addEntryButton.addActionListener(this);
 
+        modifyEntryButton = new JButton("Edit Entry");
+        modifyEntryButton.addActionListener(this);
+        modifyEntryButtonClicked = false;
+
         removeEntryButton = new JButton("Delete Entry");
         removeEntryButton.addActionListener(this);
-        isRemoveEntryButtonClicked = false;
+        removeEntryButtonClicked = false;
 
         viewEntriesButton = new JButton("View Entries");
         viewEntriesButton.addActionListener(this);
@@ -294,12 +300,15 @@ public class JournalUI extends JFrame implements ActionListener {
             formPage.setVisible(false);
         } else if (source == addEntryButton) {
             checkAddEntryButton();
+        } else if (source == modifyEntryButton) {
+            modifyEntryButtonClicked = true;
         } else if (source == removeEntryButton) {
-            isRemoveEntryButtonClicked = true;
-        } else {
-            System.out.println("Sorry, there's no corresponding action for this event.");
-            System.out.println("Try checking the JournalUI.actionPerformed() method!");
+            removeEntryButtonClicked = true;
         }
+        // } else {
+        // System.out.println("Sorry, there's no corresponding action for this event.");
+        // System.out.println("Try checking the JournalUI.actionPerformed() method!");
+        // }
     }
 
     /*
@@ -325,6 +334,7 @@ public class JournalUI extends JFrame implements ActionListener {
         // TOP: button to go to form page
         buttonPanel.removeAll();
         buttonPanel.add(viewFormButton);
+        buttonPanel.add(modifyEntryButton);
         buttonPanel.add(removeEntryButton);
         buttonPanel.add(saveButton);
         logPage.add(buttonPanel, BorderLayout.PAGE_START);
@@ -356,11 +366,12 @@ public class JournalUI extends JFrame implements ActionListener {
      */
     private void watchSelectionList(JList<Entry> entriesList) {
         entriesList.addListSelectionListener(new ListSelectionListener() {
+
             @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent e) {
                 // Check if the event is final to prevent double firing
                 if (!e.getValueIsAdjusting()) {
-                    if (isRemoveEntryButtonClicked) {
+                    if (removeEntryButtonClicked) {
                         journal.removeEntry(entriesList.getSelectedValue());
                         // System.out.println(journal.getEntries());
                         entriesList.revalidate();
@@ -368,7 +379,7 @@ public class JournalUI extends JFrame implements ActionListener {
                         // ((DefaultListModel<Entry>)entriesList.getModel()).removeElement(selectedEntry);
                         // // TODO
                         update();
-                        isRemoveEntryButtonClicked = false;
+                        removeEntryButtonClicked = false;
                     }
                 } else {
                     Entry selectedEntry = entriesList.getSelectedValue();
@@ -378,6 +389,12 @@ public class JournalUI extends JFrame implements ActionListener {
                         titleText.setText(selectedEntry.getTitle());
                         contentText.setText(selectedEntry.getContent());
                         moodText.setText(selectedEntry.getMood());
+                        if (modifyEntryButtonClicked) {
+                            selectedEntry.setTitle(titleText.getText());
+                            selectedEntry.setContent(contentText.getText());
+                            selectedEntry.setMood(moodText.getText());
+                            modifyEntryButtonClicked = false;
+                        }
                     }
                 }
             }
