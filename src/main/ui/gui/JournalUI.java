@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -78,7 +80,7 @@ public class JournalUI extends JFrame implements ActionListener {
         setAppIcon();
         initAll();
         setLocation(400, 200); // positions window on desktop at given x and y coordinates
-        setResizable(false); // prevents user from resizing window
+        // setResizable(false); // prevents user from resizing window
         setSize(APP_WIDTH, APP_HEIGHT); // sets size of window
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -121,6 +123,7 @@ public class JournalUI extends JFrame implements ActionListener {
     private void setUpHomePage() {
         homePage = new JPanel();
         homePage.setLayout(new BorderLayout(0, 30));
+        homePage.setBackground(Color.WHITE);
 
         JPanel centerContentsPanel = new JPanel();
         centerContentsPanel.setLayout(new BorderLayout());
@@ -334,7 +337,7 @@ public class JournalUI extends JFrame implements ActionListener {
         // TOP: button to go to form page
         buttonPanel.removeAll();
         buttonPanel.add(viewFormButton);
-        buttonPanel.add(modifyEntryButton);
+        // buttonPanel.add(modifyEntryButton);
         buttonPanel.add(removeEntryButton);
         buttonPanel.add(saveButton);
         logPage.add(buttonPanel, BorderLayout.PAGE_START);
@@ -350,7 +353,13 @@ public class JournalUI extends JFrame implements ActionListener {
 
         // SIDE: list of entries to select
         JList<Entry> entriesList = new JList<>(journal.getEntries().toArray(new Entry[0]));
-        // DefaultListModel<Entry> listModel = new DefaultListModel<>(); // TODO
+        DefaultListModel<Entry> listModel = new DefaultListModel<>(); // TODO
+        entriesList.setModel(listModel);
+        for (Entry entry : journal.getEntries()) {
+            listModel.addElement(entry);
+        }
+        entriesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        entriesList.setBackground(Color.LIGHT_GRAY);
         logPage.add(entriesList, BorderLayout.LINE_START);
 
         // when entry is selected, display entry info
@@ -373,6 +382,8 @@ public class JournalUI extends JFrame implements ActionListener {
                 if (!e.getValueIsAdjusting()) {
                     if (removeEntryButtonClicked) {
                         journal.removeEntry(entriesList.getSelectedValue());
+                        // ((DefaultListModel<Entry>)
+                        // entriesList.getModel()).remove(entriesList.getSelectedIndex());
                         // System.out.println(journal.getEntries());
                         entriesList.revalidate();
                         entriesList.repaint();
@@ -389,12 +400,12 @@ public class JournalUI extends JFrame implements ActionListener {
                         titleText.setText(selectedEntry.getTitle());
                         contentText.setText(selectedEntry.getContent());
                         moodText.setText(selectedEntry.getMood());
-                        if (modifyEntryButtonClicked) {
-                            selectedEntry.setTitle(titleText.getText());
-                            selectedEntry.setContent(contentText.getText());
-                            selectedEntry.setMood(moodText.getText());
-                            modifyEntryButtonClicked = false;
-                        }
+                        // if (modifyEntryButtonClicked) {
+                        // selectedEntry.setTitle(titleText.getText());
+                        // selectedEntry.setContent(contentText.getText());
+                        // selectedEntry.setMood(moodText.getText());
+                        // modifyEntryButtonClicked = false;
+                        // }
                     }
                 }
             }
