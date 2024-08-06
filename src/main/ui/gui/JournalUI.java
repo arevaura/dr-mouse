@@ -5,8 +5,6 @@ import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -65,7 +63,7 @@ public class JournalUI extends JFrame implements ActionListener {
     private JPanel logPage; // page to see log entries BORDERLAYOUT
 
     static final int TEXT_SIZE = 50;
-    static final int APP_WIDTH = 600;
+    static final int APP_WIDTH = 740;
     static final int APP_HEIGHT = 600;
 
     // ==========--CONSTRUCTOR--==========
@@ -78,7 +76,7 @@ public class JournalUI extends JFrame implements ActionListener {
         setAppIcon();
         initAll();
         setLocation(400, 200); // positions window on desktop at given x and y coordinates
-        // setResizable(false); // prevents user from resizing window
+        setResizable(false); // prevents user from resizing window
         setSize(APP_WIDTH, APP_HEIGHT); // sets size of window
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -120,19 +118,26 @@ public class JournalUI extends JFrame implements ActionListener {
      */
     private void setUpHomePage() {
         homePage = new JPanel();
-        homePage.setLayout(new BoxLayout(homePage, BoxLayout.Y_AXIS));
+        homePage.setLayout(new BorderLayout(0, 30));
 
+        JPanel centerContentsPanel = new JPanel();
+        centerContentsPanel.setLayout(new BorderLayout());
         ImageIcon image = new ImageIcon("./graphics/confusedmouse.jpg");
-        homePage.add(new JLabel(image));
-        homePage.add(Box.createRigidArea(new Dimension(0, 15)));
+        centerContentsPanel.add(new JLabel(image), BorderLayout.CENTER);
+        // homePage.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        homePage.add(new JLabel("Welcome to Dr. Mouse!"));
-        homePage.add(Box.createRigidArea(new Dimension(0, 30)));
-        homePage.add(viewFormButton);
-        homePage.add(Box.createRigidArea(new Dimension(0, 15)));
-        homePage.add(viewEntriesButton);
-        homePage.add(Box.createRigidArea(new Dimension(0, 30)));
-        homePage.add(loadButton);
+        centerContentsPanel.add(new JLabel("Welcome to Dr. Mouse!"), BorderLayout.PAGE_START);
+        // homePage.add(Box.createRigidArea(new Dimension(0, 30)));
+        // buttonPanel.removeAll();
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(viewFormButton);
+        // homePage.add(Box.createRigidArea(new Dimension(0, 15)));
+        buttonPanel.add(viewEntriesButton);
+        // homePage.add(Box.createRigidArea(new Dimension(0, 30)));
+        buttonPanel.add(loadButton);
+        centerContentsPanel.add(buttonPanel, BorderLayout.PAGE_END);
+        homePage.add(centerContentsPanel, BorderLayout.CENTER);
 
         add(homePage);
         homePage.setVisible(true);
@@ -148,7 +153,21 @@ public class JournalUI extends JFrame implements ActionListener {
 
         initFormLabels();
         initFormTexts();
-        addComponentsToFormPage();
+        SpringLayout formSpringLayout = new SpringLayout();
+        JPanel form = new JPanel();
+        form.setLayout(formSpringLayout); // TODO: problem is only texts show after first entry
+        // form.setVisible(true);
+        formPage.add(form, BorderLayout.CENTER);
+
+        populateFormPageWithFields(form);
+        setFormPageConstraints(formSpringLayout, form);
+
+        buttonPanel.removeAll();
+        buttonPanel.add(addEntryButton);
+        buttonPanel.add(viewEntriesButton);
+        // buttonPanel.setVisible(true);
+        formPage.add(buttonPanel, BorderLayout.PAGE_END);
+        update();
 
         add(formPage);
         formPage.setVisible(false);
@@ -210,30 +229,8 @@ public class JournalUI extends JFrame implements ActionListener {
         titleText = new JTextField(TEXT_SIZE - 5);
         contentText = new JTextArea("REQUIRED FIELD: Click to edit.", 3, 58);
         contentText.setWrapStyleWord(true); // makes sure box doesn't shrink when no text present
+        contentText.setLineWrap(true); // makes sure text wraps around
         moodText = new JTextField(TEXT_SIZE - 10);
-    }
-
-    /*
-     * MODIFIES: this
-     * EFFECTS: adds all the components to the form page panel;
-     */
-    private void addComponentsToFormPage() {
-        SpringLayout formSpringLayout = new SpringLayout();
-        JPanel form = new JPanel();
-        form.setLayout(formSpringLayout); // TODO: problem is only texts show after first entry
-        form.setVisible(true);
-        formPage.add(form, BorderLayout.CENTER);
-
-        populateFormPageWithFields(form);
-        setFormPageConstraints(formSpringLayout, form);
-
-        buttonPanel.removeAll();
-        buttonPanel.add(addEntryButton);
-        buttonPanel.add(viewEntriesButton);
-        buttonPanel.setVisible(true);
-        formPage.add(buttonPanel, BorderLayout.PAGE_END);
-
-        update();
     }
 
     /*
@@ -286,15 +283,15 @@ public class JournalUI extends JFrame implements ActionListener {
         } else if (source == saveButton) {
             saveJournal();
         } else if (source == viewFormButton) {
+            checkViewFormButton();
             formPage.setVisible(true);
             homePage.setVisible(false);
             logPage.setVisible(false);
-            checkViewFormButton();
         } else if (source == viewEntriesButton) {
+            checkViewEntriesButton();
             logPage.setVisible(true);
             homePage.setVisible(false);
             formPage.setVisible(false);
-            checkViewEntriesButton();
         } else if (source == addEntryButton) {
             checkAddEntryButton();
         } else if (source == removeEntryButton) {
@@ -311,6 +308,11 @@ public class JournalUI extends JFrame implements ActionListener {
      * -------- input form of the journal if it was;
      */
     private void checkViewFormButton() {
+        buttonPanel.removeAll();
+        buttonPanel.add(addEntryButton);
+        buttonPanel.add(viewEntriesButton);
+        buttonPanel.setVisible(true);
+        formPage.add(buttonPanel, BorderLayout.PAGE_END);
         update();
     }
 
@@ -336,10 +338,10 @@ public class JournalUI extends JFrame implements ActionListener {
         setEntryPanelConstraints(entryPanel, springLayout);
         logPage.add(entryPanel, BorderLayout.CENTER);
 
-        // BOTTOM: list of entries to select
+        // SIDE: list of entries to select
         JList<Entry> entriesList = new JList<>(journal.getEntries().toArray(new Entry[0]));
         // DefaultListModel<Entry> listModel = new DefaultListModel<>(); // TODO
-        logPage.add(entriesList, BorderLayout.PAGE_END);
+        logPage.add(entriesList, BorderLayout.LINE_START);
 
         // when entry is selected, display entry info
         watchSelectionList(entriesList);
@@ -435,7 +437,7 @@ public class JournalUI extends JFrame implements ActionListener {
         repaint();
         this.pack();
         setSize(APP_WIDTH, APP_HEIGHT);
-        // formPage.setVisible(true);
+        // setVisible(true);
     }
 
     /*
