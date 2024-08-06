@@ -57,6 +57,14 @@ Mice are intellectual creatures. Much like us, some prefer to stay close to peer
       - content of entry (*required*; user-generated)
       - mood at time of entry creation (*optional*; user-generated)
 - As a user, I want to be able to save my log entries to file and have the option to do so or not.
-- As a user, I want to be given the option to load my log entries from file and continue editing them.
+- As a user, I want to be given the option to load my log entries from file and continue editing them.  
+
+# Instructions for Grader
+
+- You can generate the first required action related to the user story "adding an entry to the journal" by clicking the `Write Entry` button at the start of the application.
+- You can generate the second required action related to the user story "deleting an entry from the journal" by clicking the `Delete Entry` button on the entry log page (click any `View Entries` button to get to this page). Then, click from the list at the bottom the entry you would like to delete.
+- You can locate my visual component at the start of the application (*check out Dr. Mouse's wonderful headshot*). 
+- You can save the state of my application by clicking the `View Entries` button to reach the entry log page and then clicking the `Save Entries` button.
+- You can reload the state of my application by clicking the `Load Saved Entries` button at the start.  
 
 ###### `©jieva 2024`
