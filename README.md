@@ -62,9 +62,15 @@ Mice are intellectual creatures. Much like us, some prefer to stay close to peer
 # Instructions for Grader
 
 - You can generate the first required action related to the user story "adding an entry to the journal" by clicking the `Write Entry` button at the start of the application.
-- You can generate the second required action related to the user story "deleting an entry from the journal" by clicking the `Delete Entry` button on the entry log page (click any `View Entries` button to get to this page). Then, click from the list at the bottom the entry you would like to delete.
+- You can generate the second required action related to the user story "deleting an entry from the journal" by clicking the `Delete Entry` button on the entry log page (click any `View Entries` button to get to this page). Then, click from the list at the side the entry you would like to delete.
 - You can locate my visual component at the start of the application (*check out Dr. Mouse's wonderful headshot*). 
 - You can save the state of my application by clicking the `View Entries` button to reach the entry log page and then clicking the `Save Entries` button.
 - You can reload the state of my application by clicking the `Load Saved Entries` button at the start.  
+
+# Phase 4: Task 2
+
+Representative sample of the events that occur when this program runs:  
+<img width="248" alt="image" src="https://media.github.students.cs.ubc.ca/user/25154/files/7b1031a8-6300-4312-ba99-3483e77e0acf">  
+
 
 ###### `©jieva 2024`
