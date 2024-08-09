@@ -35,7 +35,7 @@ Since the global pandemic hit a few years ago, people have started to pay greate
 
 ***
 
-![](https://media.github.students.cs.ubc.ca/user/25154/files/b0230aeb-abe4-416b-a635-8c03b79f7bb6)
+<img width="200" alt="" src="https://media.github.students.cs.ubc.ca/user/25154/files/b0230aeb-abe4-416b-a635-8c03b79f7bb6">
 
 
 #### Why choose Dr. Mouse?  
@@ -70,7 +70,8 @@ Mice are intellectual creatures. Much like us, some prefer to stay close to peer
 # Phase 4: Task 2
 
 Representative sample of the events that occur when this program runs:  
-<img width="450" alt="EventLogSampleScreenshot 2024-08-08 165258" src="https://media.github.students.cs.ubc.ca/user/25154/files/4cb8b835-04fd-43db-85d2-5941a3a3ce21">  
+
+<img width="460" alt="EventLogSampleScreenshot 2024-08-08 165258" src="https://media.github.students.cs.ubc.ca/user/25154/files/4cb8b835-04fd-43db-85d2-5941a3a3ce21">  
 *Note that despite the event descriptions the event log only prints to the terminal after the session is terminated.*  
 
 # Phase 4: Task 3
@@ -78,11 +79,12 @@ Representative sample of the events that occur when this program runs:
 *Please reference the UML_Design_Diagram file in the root folder for the following reflection below.*  
 *Note that grey boxes indicate static classes and that JournalUI handles the GUI while UserHandler manages the console program.*  
 
-If I had more time to work on this project, one thing I would do is remove any associations from the UI and GUI classes that point to the `Entry` class. Since `Journal` is already associated with `Entry`, and `JournalUI` as well as `UserHandler` are associated with `Journal`, the extra associations to `Entry` are redundant and introduce unnecessary coupling in the code. Removing these would make the design cleaner.  
+If I had more time to work on this project, one thing I would do is remove any associations from the UI and GUI classes that point to the `Entry` class. Since `Journal` is already associated with `Entry`, and `JournalUI` as well as `UserHandler` are associated with `Journal`, the extra associations to `Entry` are redundant and introduce unnecessary coupling in the code. Removing these associations would make the design cleaner.  
 
 Additionally, I would create a new class to handle saving and loading functions involving the `JsonWriter` and `JsonReader` classes. Again, both the GUI and primary console class contain duplicate methods that deal with this. Allocating the saving and loading functionality to be extra responsibilities of both these classes makes the purpose of them less clear and focused. Although it may initially seem unintuitive to introduce a new class, it would ultimately improve the cohesion of the design.  
 
-   .   .   .   .   .   .   .   .   .   .   .   .   <img width="410" alt="UML_Design_Diagram" src="https://media.github.students.cs.ubc.ca/user/25154/files/1613e915-1578-47ae-b5e7-f2cd02097930">   <img width="425" alt="UML_Design_Diagram_Improved" src="https://media.github.students.cs.ubc.ca/user/25154/files/2d192055-8f5a-4ab2-b7d2-c0866aed1e25">  
+<img width="600" alt="UML_Design_Diagram" src="https://media.github.students.cs.ubc.ca/user/25154/files/1613e915-1578-47ae-b5e7-f2cd02097930">  
+<img width="600" alt="UML_Design_Diagram_Improved" src="https://media.github.students.cs.ubc.ca/user/25154/files/2d192055-8f5a-4ab2-b7d2-c0866aed1e25">  
 
 
 ###### `©jieva 2024`
