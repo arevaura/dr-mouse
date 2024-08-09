@@ -61,7 +61,7 @@ public class JournalUI extends JFrame implements ActionListener, WindowListener 
     private JButton addEntryButton;
     private JButton modifyEntryButton;
     private JButton removeEntryButton;
-    private boolean modifyEntryButtonClicked;
+    // private boolean modifyEntryButtonClicked;
     private boolean removeEntryButtonClicked;
     private JButton viewEntriesButton;
 
@@ -214,7 +214,7 @@ public class JournalUI extends JFrame implements ActionListener, WindowListener 
 
         modifyEntryButton = new JButton("Edit Entry");
         modifyEntryButton.addActionListener(this);
-        modifyEntryButtonClicked = false;
+        // modifyEntryButtonClicked = false;
 
         removeEntryButton = new JButton("Delete Entry");
         removeEntryButton.addActionListener(this);
@@ -309,7 +309,7 @@ public class JournalUI extends JFrame implements ActionListener, WindowListener 
         } else if (source == addEntryButton) {
             checkAddEntryButton();
         } else if (source == modifyEntryButton) {
-            modifyEntryButtonClicked = true;
+            // modifyEntryButtonClicked = true;
         } else if (source == removeEntryButton) {
             removeEntryButtonClicked = true;
         }

@@ -67,12 +67,12 @@ class JsonWriterTest extends JsonTest {
             List<Entry> entries = jr.getEntries();
             assertEquals(2, entries.size());
             // check first entry
-            checkDate(LocalDate.now().toString(), entries.get(0)); // TODO: check that this won't be a problem
+            checkDate(LocalDate.now().toString(), entries.get(0));
             checkTitle("", entries.get(0));
             checkContent("hello", entries.get(0));
             checkMood("", entries.get(0));
             // check second entry
-            checkDate(LocalDate.now().toString(), entries.get(1)); // TODO: is it supposed to be today's date?
+            checkDate(LocalDate.now().toString(), entries.get(1));
             checkTitle("", entries.get(1));
             checkContent("content", entries.get(1));
             checkMood("", entries.get(1));
