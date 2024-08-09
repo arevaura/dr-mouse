@@ -20,7 +20,9 @@ import persistence.Writable;
  * ------------- 2) [private JSONArray] EntriesToJson()
  */
 public class Journal implements Writable {
+
     // ==========--FIELDS--==========
+    private EventLog eventLog = EventLog.getInstance();
     private ArrayList<Entry> entries;
     private int numEntries;
 
@@ -32,6 +34,7 @@ public class Journal implements Writable {
     public Journal() {
         entries = new ArrayList<>();
         numEntries = 0;
+        eventLog.logEvent(new Event("New journal created with 0 entries."));
     }
 
     // ==========--GETTER-METHODS--==========
@@ -39,6 +42,7 @@ public class Journal implements Writable {
      * EFFECTS: returns a list of all the entries logged in the journal;
      */
     public ArrayList<Entry> getEntries() {
+        eventLog.logEvent(new Event("Retrieved all entries from journal."));
         return entries;
     }
 
@@ -67,6 +71,7 @@ public class Journal implements Writable {
     public void addEntry(Entry entry) {
         entries.add(entry);
         numEntries++;
+        eventLog.logEvent(new Event("Entry added to journal."));
     }
 
     /*
@@ -78,6 +83,7 @@ public class Journal implements Writable {
     public void removeEntry(Entry entry) {
         entries.remove(entry);
         numEntries--;
+        eventLog.logEvent(new Event("Entry removed from journal."));
     }
 
     /*

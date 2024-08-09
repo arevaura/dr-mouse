@@ -21,7 +21,9 @@ import persistence.Writable;
  * ------------- 1) [public JSONObject] toJson()
  */
 public class Entry implements Writable {
+
     // ==========--FIELDS--==========
+    private EventLog eventLog = EventLog.getInstance();
     private LocalDate date;
     private String title;
     private String content;
@@ -36,10 +38,10 @@ public class Entry implements Writable {
      */
     public Entry(String text) {
         this.date = LocalDate.now();
-
         this.title = "";
         this.content = text;
         this.mood = "";
+        eventLog.logEvent(new Event("New entry created."));
     }
 
     // ==========--GETTER-METHODS--==========

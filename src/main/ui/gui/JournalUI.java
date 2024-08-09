@@ -19,6 +19,8 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ListSelectionListener;
 
 import model.Entry;
+import model.Event;
+import model.EventLog;
 import model.Journal;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -27,13 +29,15 @@ import persistence.JsonWriter;
  * EFFECTS: Represents the graphical user interface for the journal application; 
  * -------- allows user to input and view journal entries;
  */
-public class JournalUI extends JFrame implements ActionListener {
+public class JournalUI extends JFrame implements ActionListener, WindowListener {
 
     // ==========--FIELDS--==========
 
     private static final String JSON_STORE = "./data/journal.json";
     private JsonWriter jsonWriter = new JsonWriter(JSON_STORE);
     private JsonReader jsonReader = new JsonReader(JSON_STORE);
+
+    private EventLog eventLog = EventLog.getInstance();
 
     private Journal journal;
     private Entry entry;
@@ -84,6 +88,7 @@ public class JournalUI extends JFrame implements ActionListener {
         setSize(APP_WIDTH, APP_HEIGHT); // sets size of window
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(this);
     }
 
     // ==========--METHODS--==========
@@ -352,18 +357,21 @@ public class JournalUI extends JFrame implements ActionListener {
         logPage.add(entryPanel, BorderLayout.CENTER);
 
         // SIDE: list of entries to select
-        JList<Entry> entriesList = new JList<>(journal.getEntries().toArray(new Entry[0]));
+        
         DefaultListModel<Entry> listModel = new DefaultListModel<>(); // TODO
-        entriesList.setModel(listModel);
+        
         for (Entry entry : journal.getEntries()) {
             listModel.addElement(entry);
         }
+        // entriesList.setModel(listModel);
+        JList<Entry> entriesList = new JList<>(listModel);
+
         entriesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         entriesList.setBackground(Color.LIGHT_GRAY);
         logPage.add(entriesList, BorderLayout.LINE_START);
 
         // when entry is selected, display entry info
-        watchSelectionList(entriesList);
+        watchSelectionList(entriesList, listModel);
 
         update();
     }
@@ -373,7 +381,7 @@ public class JournalUI extends JFrame implements ActionListener {
      * EFFECTS: watches the selection list of entries and updates the journal
      * -------- user interface accordingly;
      */
-    private void watchSelectionList(JList<Entry> entriesList) {
+    private void watchSelectionList(JList<Entry> entriesList, DefaultListModel<Entry> listModel) {
         entriesList.addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -382,9 +390,9 @@ public class JournalUI extends JFrame implements ActionListener {
                 if (!e.getValueIsAdjusting()) {
                     if (removeEntryButtonClicked) {
                         journal.removeEntry(entriesList.getSelectedValue());
-                        // ((DefaultListModel<Entry>)
-                        // entriesList.getModel()).remove(entriesList.getSelectedIndex());
                         // System.out.println(journal.getEntries());
+                        // System.out.println(listModel.getSize());
+                        // listModel.remove(entriesList.getSelectedIndex());
                         entriesList.revalidate();
                         entriesList.repaint();
                         // ((DefaultListModel<Entry>)entriesList.getModel()).removeElement(selectedEntry);
@@ -505,5 +513,54 @@ public class JournalUI extends JFrame implements ActionListener {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }
         return true;
+    }
+
+    @Override
+    // MODIFIES: this
+    // EFFECTS: clears event log when application opens
+    public void windowOpened(WindowEvent e) {
+        eventLog.clear();
+        System.out.println("\n<< New journal session started... >>\n");
+    }
+
+    @Override
+    // MODIFIES: this
+    // EFFECTS: prints out event log when application closes
+    public void windowClosing(WindowEvent e) {
+        System.out.println("Event log for current journal session printed below:\n");
+        for (Event event : eventLog) {
+            System.out.println("> " + event + "\n");
+        }
+        System.out.println("<< Current journal session terminated. >>\n");
+    }
+
+    @Override
+    // MODIFIES: this
+    // EFFECTS: does nothing but overrides windowClosing() to satisfy WindowListener
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    // MODIFIES: this
+    // EFFECTS: does nothing but overrides windowClosing() to satisfy WindowListener
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    // MODIFIES: this
+    // EFFECTS: does nothing but overrides windowClosing() to satisfy WindowListener
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    // MODIFIES: this
+    // EFFECTS: does nothing but overrides windowClosing() to satisfy WindowListener
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    // MODIFIES: this
+    // EFFECTS: does nothing but overrides windowClosing() to satisfy WindowListener
+    public void windowDeactivated(WindowEvent e) {
     }
 }
